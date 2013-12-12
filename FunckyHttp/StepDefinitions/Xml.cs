@@ -19,51 +19,6 @@ namespace FunckyHttp.StepDefinitions
     public class Xml : Steps
     {
 
-        [Given(@"XslTransformation is (.*)")]
-        public void GivenXslTransformationIs(XslCompiledTransform xslt)
-        {
-            //TODO:cache
-            ScenarioContextStore.XSLTransform = xslt;
-        }
-        [Given(@"XslTransformation is")]
-        public void GivenXslTransformationIsMultiline(string xslt)
-        {
-            var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
-            using (var xsltReader = XmlTextReader.Create(new MemoryStream(Encoding.Default.GetBytes(xslt)), settings))
-            {
-                var transform = new XslCompiledTransform();
-                transform.Load(xsltReader);
-            }
-        }
-
-        [When(@"request content is transformed")]
-        public void WhenRequestContentIsTransformed()
-        {
-            Assert.IsNotNull(ScenarioContextStore.RequestContent, "Request Content is null");
-            Assert.IsNotNull(ScenarioContextStore.XSLTransform, "XSL Transformation is null");
-            var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
-
-            using (var xmlReader = XmlTextReader.Create(new MemoryStream(ScenarioContextStore.RequestContent), settings))
-            {
-                using (var ms = new MemoryStream())
-                {
-                    ScenarioContextStore.XSLTransform.Transform(xmlReader, XmlWriter.Create(ms, ScenarioContextStore.XSLTransform.OutputSettings));
-                    ms.Position = 0;
-                    ScenarioContextStore.RequestContent = ms.ToArray();
-                    Utils.ResetRequestXML();
-                }
-            }
-        }
-
-
-
-        [When(@"the results are stored in \[(.*)]")]
-        public void WhenTheResultsAreStoredIn(string varName)
-        {
-            ScenarioContextStore.StoreUserVariable(varName, ScenarioContextStore.QueryResult);
-        }
-
-
         [Given(@"xml namespace aliases are")]
         public void GivenTheFollowingXmlNamespaceAliases(Table table)
         {
@@ -78,29 +33,29 @@ namespace FunckyHttp.StepDefinitions
         }
 
 
-        [When(@"the following query is run against response: (.*)")]
-        public void WhenTheFollowingQueryIsRunAgainstResponse(Wrapped<string> qry)
+        [When(@"the following query is run against response: '(.*)'")]
+        public void WhenTheFollowingQueryIsRunAgainstResponse(string qry)
         {
             ExecuteXpathQuery(ScenarioContextStore.ResponseContentXML.Value, qry);
         }
 
         [When(@"the following query is run against response:")] // multiline
-        public void WhenTheFollowingQueryIsRunAgainstResponse(string qry)
+        public void WhenTheFollowingQueryIsRunAgainstResponseMultiline(string qry)
         {
-            WhenTheFollowingQueryIsRunAgainstResponse(new Wrapped<string>(qry));
+            WhenTheFollowingQueryIsRunAgainstResponse(qry);
         }
 
 
-        [When(@"the following query is run against request: (.*)")]
-        public void WhenTheFollowingQueryIsRunAgainstRequest(Wrapped<string> qry)
+        [When(@"the following query is run against request: '(.*)'")]
+        public void WhenTheFollowingQueryIsRunAgainstRequest(string qry)
         {
             ExecuteXpathQuery(ScenarioContextStore.RequestContentXML.Value, qry);
         }
 
         [When(@"the following query is run against request:")] // multiline
-        public void WhenTheFollowingQueryIsRunAgainstRequest(string qry)
+        public void WhenTheFollowingQueryIsRunAgainstRequestMultiline(string qry)
         {
-            WhenTheFollowingQueryIsRunAgainstRequest(new Wrapped<string>(qry));
+            WhenTheFollowingQueryIsRunAgainstRequest(qry);
         }
 
         [When(@"query description is '(.*)'")]
@@ -132,12 +87,12 @@ namespace FunckyHttp.StepDefinitions
                 Assert.Fail("Query result type and expected value type missmatch.");
         }
 
-        [Then(@"the result should be (.*)")]
-        public void ThenTheResultShouldBe(Wrapped<string> expected)
+        [Then(@"the result should be '(.*)'")]
+        public void ThenTheResultShouldBe(string expected)
         {
             var actual = ScenarioContextStore.QueryResult as string;
             if (actual != null)
-                Assert.AreEqual(expected.Value, actual, GetQueryDescription());
+                Assert.AreEqual(expected, actual, GetQueryDescription());
             else
                 Assert.Fail("Query result type and expected value type missmatch.");
         }
@@ -166,7 +121,7 @@ namespace FunckyHttp.StepDefinitions
         }
 
 
-        private void ExecuteXpathQuery(XPathDocument target, Wrapped<string> qry)
+        private void ExecuteXpathQuery(XPathDocument target, string qry)
         {
             ScenarioContextStore.Query = XPathExpression.Compile(qry);
             if (ScenarioContextStore.NamespaceManager != null)

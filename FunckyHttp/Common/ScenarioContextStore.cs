@@ -78,12 +78,6 @@ namespace FunckyHttp.Common
             set { ScenarioContext.Current["http.response.content.xml"] = value; }
         }
 
-        public static XslCompiledTransform XSLTransform
-        {
-            get { return ScenarioContext.Current.GetContextItem<XslCompiledTransform>("xml.transformation"); }
-            set { ScenarioContext.Current["xml.transformation"] = value; }
-        }
-
         public static string BaseUrl
         {
             get { return ScenarioContext.Current.GetContextItem<string>("http.baseurl"); }
@@ -97,16 +91,6 @@ namespace FunckyHttp.Common
                 return context[key] == null ? null : context.Get<T>(key);
             }
             return null;
-        }
-
-        public static void StoreUserVariable(string variableName, object value)
-        {
-            ScenarioContext.Current["variable." + variableName] = value;
-        }
-
-        public static object RetrieveUserVariable(string variableName)
-        {
-            return ScenarioContext.Current.GetContextItem<object>("variable." + variableName);
         }
     }
 }
