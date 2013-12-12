@@ -14,16 +14,6 @@ namespace FunckyApp.Controllers
     {
         private static ConcurrentDictionary<string, Script> repo = new ConcurrentDictionary<string, Script>();
 
-        static ScriptsController()
-        { 
-            var script = new Script
-            {
-                Id = "123456789",
-                Name = "Test",
-            };
-            repo[script.Id] = script;
-        }
-
         // GET api/scripts
         public IEnumerable<string> Get()
         {

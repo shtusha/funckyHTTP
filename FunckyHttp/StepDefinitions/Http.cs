@@ -21,16 +21,16 @@ namespace FunckyHttp.StepDefinitions
         private Lazy<HttpWebResponse> _RequestInvoker;
 
         [Given(@"base url is (.*)")]
-        public void GivenBaseUrlIs(Wrapped<string> url)
+        public void GivenBaseUrlIs(string url)
         {
             ScenarioContextStore.BaseUrl = url;
         }
 
         [Given(@"url is (.*)")]
-        public void GivenUrlIs(Wrapped<string> url)
+        public void GivenUrlIs(string url)
         {
 
-            var _url = url.Value;
+            var _url = url;
             if (_url.StartsWith("/") && ScenarioContextStore.BaseUrl.EndsWith("/"))
             {
                 _url = _url.Remove(0, 1);
@@ -53,13 +53,13 @@ namespace FunckyHttp.StepDefinitions
         }
 
         [Then(@"response header (.*) should exist")]
-        public void ThenResponseHeaderShouldExist(Wrapped<string> headerName)
+        public void ThenResponseHeaderShouldExist(string headerName)
         {
-            Assert.IsTrue(Response.Headers.AllKeys.Contains(headerName.Value), "{0} header was expected, but was not returned.", headerName);
+            Assert.IsTrue(Response.Headers.AllKeys.Contains(headerName), "{0} header was expected, but was not returned.", headerName);
         }
 
         [Then(@"response header (.*) should be (.*)")]
-        public void ThenResponseHeaderShouldBe(Wrapped<string> headerName, Wrapped<string> headerValue)
+        public void ThenResponseHeaderShouldBe(string headerName, string headerValue)
         {
             ThenResponseHeaderShouldExist(headerName);
             Assert.AreEqual(Response.Headers[headerName], headerValue);
