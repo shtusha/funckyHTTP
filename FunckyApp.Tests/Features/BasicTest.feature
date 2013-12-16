@@ -28,8 +28,24 @@ Scenario: Edge cases
 	| Content-Length | 0     |
 	Then response Status Code should be 400
 	
+Scenario: Mime Type handling
 
-	
+#When accept header is xml response should be xml
+	Given url is scripts/
+	And request headers are
+	| name   | value           |
+	| Accept | application/xml |
+	When I submit a get request
+	Then response header Content-Type should contain 'application/xml'
+
+#When accept header is xml response should be json	
+	Given url is scripts/
+	And request headers are
+	| name   | value           |
+	| Accept | application/json |
+	When I submit a get request
+	Then response header Content-Type should be 'application/json; charset=utf-8'
+
 Scenario: Insert script
 
 	Given url is scripts/

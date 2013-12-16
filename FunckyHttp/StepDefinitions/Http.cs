@@ -16,9 +16,7 @@ namespace FunckyHttp.StepDefinitions
     [Binding]
     public class Http : Steps
     {
-
-        //private readonly string _RootUrl = ConfigurationManager.AppSettings["rootUrl"]; //"http://fnf-rc-ite.cloudapp.net/Fnf.RateCalculator.Web/";
-        private Lazy<HttpWebResponse> _RequestInvoker;
+        //private Lazy<HttpWebResponse> _RequestInvoker;
 
         [Given(@"base url is (.*)")]
         public void GivenBaseUrlIs(string url)
@@ -41,13 +39,15 @@ namespace FunckyHttp.StepDefinitions
             }
 
 
-            ScenarioContextStore.RequestUrl = ScenarioContextStore.BaseUrl + _url;
+            //TODO handle absolute vs relative urls.
+
+            ScenarioContextStore.HttpCallContext = new HttpMethodCallContext(ScenarioContextStore.BaseUrl + _url, ScenarioContextStore.RequestHeaders);
 
             //If there are multiple requests per scenario we want to reset every time url changes
             //TODO: think about this...
-            _RequestInvoker = new Lazy<HttpWebResponse>(InvokeWebRequest, true);
-            ScenarioContextStore.RequestContent = null;
-            Utils.ResetRequestXML();
+//            _RequestInvoker = new Lazy<HttpWebResponse>(InvokeWebRequest, true);
+            //ScenarioContextStore.RequestContent = null;
+            //Utils.ResetRequestXML();
 
 
         }
@@ -55,26 +55,36 @@ namespace FunckyHttp.StepDefinitions
         [Then(@"response header (.*) should exist")]
         public void ThenResponseHeaderShouldExist(string headerName)
         {
-            Assert.IsTrue(Response.Headers.AllKeys.Contains(headerName), "{0} header was expected, but was not returned.", headerName);
+            Assert.IsTrue(ScenarioContextStore.HttpCallContext.Headers.AllKeys.Contains(headerName), 
+                "{0} header was expected, but was not returned.", headerName);
         }
 
-        [Then(@"response header (.*) should be (.*)")]
+        [Then(@"response header (.*) should be '(.*)'")]
         public void ThenResponseHeaderShouldBe(string headerName, string headerValue)
         {
             ThenResponseHeaderShouldExist(headerName);
-            Assert.AreEqual(Response.Headers[headerName], headerValue);
+            Assert.AreEqual(headerValue, ScenarioContextStore.HttpCallContext.Headers[headerName]);
+        }
+
+        [Then(@"response header (.*) should contain '(.*)'")]
+        public void ThenResponseHeaderShouldContain(string headerName, string headerValue)
+        {
+            ThenResponseHeaderShouldExist(headerName);
+            Assert.IsTrue(ScenarioContextStore.HttpCallContext.Headers[headerName].Contains(headerValue),
+                string.Format("{0} header: '{1}' does not contain '{2}'", 
+                    headerName, ScenarioContextStore.HttpCallContext.Headers[headerName], headerValue));
         }
 
         [Then(@"response Status Code should be (.*)")]
         public void ThenResponseStatusCodeShouldBe(HttpStatusCode statusCode)
         {
-            Assert.AreEqual(statusCode, Response.StatusCode);
+            Assert.AreEqual(statusCode, ScenarioContextStore.HttpCallContext.StatusCode);
         }
 
         [When(@"*submit a (.*) request")]
         public void WhenSubmitARequest(string requestMethod)
         {
-            ScenarioContextStore.RequestMethod = requestMethod.ToUpper();
+            ScenarioContextStore.HttpCallContext.RequestContext.Verb = requestMethod.ToUpper();
         }
 
 
@@ -87,6 +97,16 @@ namespace FunckyHttp.StepDefinitions
                 ScenarioContextStore.RequestHeaders[row["name"]] = row["value"];
             }
 
+            if(ScenarioContextStore.HttpCallContext != null)
+            {
+                ScenarioContextStore.HttpCallContext.RequestContext.Headers.Clear();
+                foreach (var row in table.Rows)
+                {
+                    ScenarioContextStore.HttpCallContext.RequestContext.Headers[row["name"]] = row["value"];
+                }
+
+            }
+
         }
 
         [When(@"*add headers")]
@@ -94,14 +114,14 @@ namespace FunckyHttp.StepDefinitions
         {
             foreach (var row in table.Rows)
             {
-                ScenarioContextStore.RequestHeaders[row["name"]] = row["value"];
+                ScenarioContextStore.HttpCallContext.RequestContext.Headers[row["name"]] = row["value"];
             }
         }
 
         [Given(@"request content is (.*)")]
         public void GivenRequestContentIs(byte[] content)
         {
-            ScenarioContextStore.RequestContent = content;
+            ScenarioContextStore.HttpCallContext.RequestContext.Content = content;
         }
 
         [Given(@"request content is")]
@@ -110,93 +130,10 @@ namespace FunckyHttp.StepDefinitions
             GivenRequestContentIs(System.Text.Encoding.Default.GetBytes(content));
         }
 
-        public HttpWebResponse Response
-        {
-            get { return _RequestInvoker.Value; }
-        }
+        //public HttpWebResponse Response
+        //{
+        //    get { return _RequestInvoker.Value; }
+        //}
 
-        public HttpWebResponse InvokeWebRequest()
-        {
-            var request = HttpWebRequest.CreateHttp(ScenarioContextStore.RequestUrl);
-            request.Method = ScenarioContextStore.RequestMethod;
-            if (ScenarioContextStore.RequestContent != null)
-            {
-                using (var contentWriter = new BinaryWriter(request.GetRequestStream()))
-                {
-                    contentWriter.Write(ScenarioContextStore.RequestContent);
-                }
-            }
-
-            SetHeaders(request);
-            try
-            {
-                var response = (HttpWebResponse)request.GetResponse();
-                var responseStream = response.GetResponseStream();
-                using (var ms = new MemoryStream())
-                {
-                    if (responseStream != null)
-                    {
-                        responseStream.CopyTo(ms);
-                    }
-                    ScenarioContextStore.ResponseContent = ms.ToArray();
-                    Utils.ResetResponseXML();
-                }
-                return response;
-            }
-            catch (WebException ex)
-            {
-                return ex.Response as HttpWebResponse;
-            }
-        }
-
-        private void SetHeaders(HttpWebRequest request)
-        {
-            foreach (var header in ScenarioContextStore.RequestHeaders)
-            {
-                switch (header.Key.ToLower())
-                {
-                    case "accept":
-                        request.Accept = header.Value;
-                        break;
-                    case "content-length":
-                        int i;
-                        if (!int.TryParse(header.Value, out i)) throw new FormatException("Content-Length header must be a valid integer");
-                        request.ContentLength = i;
-                        break;
-                    case "content-type":
-                        request.ContentType = header.Value;
-                        break;
-                    case "expect":
-                        request.Expect = header.Value;
-                        break;
-                    case "date":
-                        DateTime dt;
-                        if (!DateTime.TryParse(header.Value, out dt)) throw new FormatException("Date header must be a valid date");
-                        request.Date = dt;
-                        break;
-                    case "host":
-                        request.Host = header.Value;
-                        break;
-                    case "if-modified-since":
-                        if (!DateTime.TryParse(header.Value, out dt)) throw new FormatException("If-Modified-Since header must be a valid date");
-                        request.IfModifiedSince = dt;
-                        break;
-                    case "referer":
-                        request.Referer = header.Value;
-                        break;
-                    case "transfer-encoding":
-                        request.TransferEncoding = header.Value;
-                        break;
-                    case "user-agent":
-                        request.UserAgent = header.Value;
-                        break;                                                
-
-                    default:
-                        request.Headers.Add(header.Key, header.Value);
-                        break;
-                }
-            }
-
-        }
     }
 }

@@ -36,7 +36,7 @@ namespace FunckyHttp.StepDefinitions
         [When(@"the following query is run against response: '(.*)'")]
         public void WhenTheFollowingQueryIsRunAgainstResponse(string qry)
         {
-            ExecuteXpathQuery(ScenarioContextStore.ResponseContentXML.Value, qry);
+            ExecuteXpathQuery(ScenarioContextStore.HttpCallContext.XMLContent, qry);
         }
 
         [When(@"the following query is run against response:")] // multiline
@@ -49,7 +49,7 @@ namespace FunckyHttp.StepDefinitions
         [When(@"the following query is run against request: '(.*)'")]
         public void WhenTheFollowingQueryIsRunAgainstRequest(string qry)
         {
-            ExecuteXpathQuery(ScenarioContextStore.RequestContentXML.Value, qry);
+            ExecuteXpathQuery(ScenarioContextStore.HttpCallContext.XMLContent, qry);
         }
 
         [When(@"the following query is run against request:")] // multiline
