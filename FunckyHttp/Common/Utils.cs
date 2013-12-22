@@ -13,7 +13,7 @@ namespace FunckyHttp.Common
 {
     public static class Utils
     {
-        public static XPathDocument BytesToXML(byte[] bytes)
+        public static XPathDocument BytesToXML(this byte[] bytes)
         {
             using (var reader = XmlTextReader.Create(new MemoryStream(bytes), new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment }))
             {
