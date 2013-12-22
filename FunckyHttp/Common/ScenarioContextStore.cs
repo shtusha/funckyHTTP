@@ -36,49 +36,11 @@ namespace FunckyHttp.Common
             set { ScenarioContext.Current["xml.namespacemanager"] = value; }
         }
 
-
-
         public static Dictionary<string, string> RequestHeaders
         {
             get { return ScenarioContext.Current.GetContextItem<Dictionary<string, string>>("http.request.headers"); }
             set { ScenarioContext.Current["http.request.headers"] = value; }
         }
-
-        //public static string RequestMethod
-        //{
-        //    get { return ScenarioContext.Current.GetContextItem<string>("http.request.method"); }
-        //    set { ScenarioContext.Current["http.request.method"] = value; }
-        //}
-
-        //public static string RequestUrl
-        //{
-        //    get { return ScenarioContext.Current.GetContextItem<string>("http.request.url"); }
-        //    set { ScenarioContext.Current["http.request.url"] = value; }
-        //}
-
-        //public static byte[] RequestContent
-        //{
-        //    get { return ScenarioContext.Current.GetContextItem<byte[]>("http.request.content"); }
-        //    set { ScenarioContext.Current["http.request.content"] = value; }
-        //}
-
-        //public static Lazy<XPathDocument> RequestContentXML
-        //{
-        //    get { return ScenarioContext.Current.GetContextItem<Lazy<XPathDocument>>("http.request.content.xml"); }
-        //    set { ScenarioContext.Current["http.request.content.xml"] = value; }
-        //}
-
-        //public static byte[] ResponseContent
-        //{
-        //    get { return ScenarioContext.Current.GetContextItem<byte[]>("http.response.content"); }
-        //    set { ScenarioContext.Current["http.response.content"] = value; }
-        //}
-
-        //public static Lazy<XPathDocument> ResponseContentXML
-        //{
-        //    get { return ScenarioContext.Current.GetContextItem<Lazy<XPathDocument>>("http.response.content.xml"); }
-        //    set { ScenarioContext.Current["http.response.content.xml"] = value; }
-        //}
 
         public static HttpMethodCallContext HttpCallContext
         {
