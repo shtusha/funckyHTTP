@@ -19,16 +19,16 @@ namespace FunckyHttp.StepDefinitions
         //private Lazy<HttpWebResponse> _RequestInvoker;
 
         [Given(@"base url is (.*)")]
-        public void GivenBaseUrlIs(string url)
+        public void GivenBaseUrlIs(Wrapped<string> url)
         {
             ScenarioContextStore.BaseUrl = url;
         }
 
         [Given(@"url is (.*)")]
-        public void GivenUrlIs(string url)
+        public void GivenUrlIs(Wrapped<string> url)
         {
 
-            var _url = url;
+            var _url = url.Value;
             if (_url.StartsWith("/") && ScenarioContextStore.BaseUrl.EndsWith("/"))
             {
                 _url = _url.Remove(0, 1);
@@ -38,18 +38,8 @@ namespace FunckyHttp.StepDefinitions
                 _url = _url.Insert(0, "/");
             }
 
-
             //TODO handle absolute vs relative urls.
-
             ScenarioContextStore.HttpCallContext = new HttpMethodCallContext(ScenarioContextStore.BaseUrl + _url, ScenarioContextStore.RequestHeaders);
-
-            //If there are multiple requests per scenario we want to reset every time url changes
-            //TODO: think about this...
-//            _RequestInvoker = new Lazy<HttpWebResponse>(InvokeWebRequest, true);
-            //ScenarioContextStore.RequestContent = null;
-            //Utils.ResetRequestXML();
-
-
         }
 
         [Then(@"response header (.*) should exist")]
@@ -59,15 +49,15 @@ namespace FunckyHttp.StepDefinitions
                 "{0} header was expected, but was not returned.", headerName);
         }
 
-        [Then(@"response header (.*) should be '(.*)'")]
-        public void ThenResponseHeaderShouldBe(string headerName, string headerValue)
+        [Then(@"response header (.*) should be (.*)")]
+        public void ThenResponseHeaderShouldBe(string headerName, Wrapped<string> headerValue)
         {
             ThenResponseHeaderShouldExist(headerName);
-            Assert.AreEqual(headerValue, ScenarioContextStore.HttpCallContext.Headers[headerName]);
+            Assert.AreEqual(headerValue.Value, ScenarioContextStore.HttpCallContext.Headers[headerName]);
         }
 
-        [Then(@"response header (.*) should contain '(.*)'")]
-        public void ThenResponseHeaderShouldContain(string headerName, string headerValue)
+        [Then(@"response header (.*) should contain (.*)")]
+        public void ThenResponseHeaderShouldContain(string headerName, Wrapped<string> headerValue)
         {
             ThenResponseHeaderShouldExist(headerName);
             Assert.IsTrue(ScenarioContextStore.HttpCallContext.Headers[headerName].Contains(headerValue),
@@ -118,22 +108,25 @@ namespace FunckyHttp.StepDefinitions
             }
         }
 
+
         [Given(@"request content is (.*)")]
+        public void GivenRequestContentIs(Wrapped<string> content)
+        {
+            GivenRequestContentIsMultiline(content);
+        }
+
+
+        //[Given(@"request content is (.*)")]
         public void GivenRequestContentIs(byte[] content)
         {
             ScenarioContextStore.HttpCallContext.RequestContext.Content = content;
         }
 
         [Given(@"request content is")]
-        public void WhenRequestContentIsMultiline(string content)
+        public void GivenRequestContentIsMultiline(string content)
         {
             GivenRequestContentIs(System.Text.Encoding.Default.GetBytes(content));
         }
-
-        //public HttpWebResponse Response
-        //{
-        //    get { return _RequestInvoker.Value; }
-        //}
 
     }
 }

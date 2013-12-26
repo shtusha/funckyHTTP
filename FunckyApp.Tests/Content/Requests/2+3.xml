@@ -1,0 +1,5 @@
+﻿<Script xmlns="http://schemas.datacontract.org/2004/07/FunckyApp.Models">
+  <Id>1234567890</Id>
+  <Name>Test</Name>
+  <Program>var a = 2+3;</Program>
+</Script>
