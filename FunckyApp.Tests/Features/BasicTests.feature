@@ -33,7 +33,7 @@ Scenario: Edge cases
 	| Content-Length | 0     |
 	Then response Status Code should be 400
 	
-Scenario: Media type handling
+Scenario: Accept header handling
 
 #When accept header is xml response should be xml
 	Given url is 'scripts/'
@@ -41,16 +41,17 @@ Scenario: Media type handling
 	| name   | value           |
 	| Accept | application/xml |
 	When I submit a get request
-	Then response header Content-Type should contain 'application/xml'
+	Then response header Content-Type should match 'application/xml'
 
 #When accept header is json response should be json	
 	Given url is 'scripts/'
 	And request headers are
-	| name   | value           |
+	| name   | value            |
 	| Accept | application/json |
 	When I submit a get request
 	Then response header Content-Type should be 'application/json; charset=utf-8'
-
+	Then response header Content-Type should match '^application/json; charset=utf-8$'
+	
 Scenario: Insert script
 
 	Given url is 'scripts/'
@@ -60,10 +61,14 @@ Scenario: Insert script
 	
 	Then response Status Code should be 200
 	And the following assertions against response should pass:
-	| name            | expected         | query                     |
-	| Id Exists       | 1                | 'count(a:Script/a:Id)'    |
-	| Name matches    | 'Test'           | 'string(//a:Name/text())' |
-	| Program matches | 'var a = 1 + 2;' | FILE(Queries\program.q)   |
+	| name                    | expected         | query                     |
+	| Id Exists               | 1                | 'count(a:Script/a:Id)'    |
+	| Name matches            | 'Test'           | 'string(//a:Name/text())' |
+	| Program matches         | 'var a = 1 + 2;' | FILE(Queries\program.txt)   |
+	
+	#repeats last test from table above
+	When the following query is run against response: FILE(Queries\program.txt)
+	Then query result should match 'var a = \d \+ \d;'
 
 Scenario: Put/Delete script
 
@@ -81,7 +86,7 @@ Scenario: Put/Delete script
 	| name            | expected       | query                     |
 	| Id matches      | '1234567890'   | 'string(//a:Id/text())'   |
 	| Name matches    | 'Test'         | 'string(//a:Name/text())' |
-	| Program matches | 'var a = 2+3;' | FILE(Queries\program.q)   |
+	| Program matches | 'var a = 2+3;' | FILE(Queries\program.txt)   |
 
 #Delete the document
 	Given url is 'scripts/1234567890'

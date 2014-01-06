@@ -51,6 +51,7 @@
     <Compile Include="Common\HttpMethodCallContext.cs" />
     <Compile Include="Common\WrappedOfT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StepDefinitions\Common.cs" />
     <Compile Include="StepDefinitions\Http.cs" />
     <Compile Include="StepDefinitions\Xml.cs" />
   </ItemGroup>

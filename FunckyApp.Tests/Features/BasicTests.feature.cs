@@ -138,11 +138,11 @@ this.FeatureBackground();
         }
         
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Media type handling")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Accept header handling")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "BasicTest")]
-        public virtual void MediaTypeHandling()
+        public virtual void AcceptHeaderHandling()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Media type handling", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Accept header handling", ((string[])(null)));
 #line 36
 this.ScenarioSetup(scenarioInfo);
 #line 5
@@ -161,7 +161,7 @@ this.FeatureBackground();
 #line 43
  testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 44
- testRunner.Then("response header Content-Type should contain \'application/xml\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("response header Content-Type should match \'application/xml\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 47
  testRunner.Given("url is \'scripts/\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
@@ -177,6 +177,8 @@ this.FeatureBackground();
  testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 52
  testRunner.Then("response header Content-Type should be \'application/json; charset=utf-8\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 53
+ testRunner.Then("response header Content-Type should match \'^application/json; charset=utf-8$\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -187,17 +189,17 @@ this.FeatureBackground();
         public virtual void InsertScript()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Insert script", ((string[])(null)));
-#line 54
+#line 55
 this.ScenarioSetup(scenarioInfo);
 #line 5
 this.FeatureBackground();
-#line 56
- testRunner.Given("url is \'scripts/\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 57
+ testRunner.Given("url is \'scripts/\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 58
  testRunner.And("request content is FILE(Requests\\1+2.xml)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 59
+#line 60
  testRunner.When("I submit a post request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 61
+#line 62
  testRunner.Then("response Status Code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
@@ -215,9 +217,13 @@ this.FeatureBackground();
             table6.AddRow(new string[] {
                         "Program matches",
                         "\'var a = 1 + 2;\'",
-                        "FILE(Queries\\program.q)"});
-#line 62
+                        "FILE(Queries\\program.txt)"});
+#line 63
  testRunner.And("the following assertions against response should pass:", ((string)(null)), table6, "And ");
+#line 70
+ testRunner.When("the following query is run against response: FILE(Queries\\program.txt)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 71
+ testRunner.Then("query result should match \'var a = \\d \\+ \\d;\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -228,23 +234,23 @@ this.FeatureBackground();
         public virtual void PutDeleteScript()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Put/Delete script", ((string[])(null)));
-#line 68
+#line 73
 this.ScenarioSetup(scenarioInfo);
 #line 5
 this.FeatureBackground();
-#line 71
+#line 76
  testRunner.Given("url is \'scripts/1234567890\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 72
- testRunner.And("request content is FILE(Requests\\2+3.xml)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 73
- testRunner.When("I submit a put request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 74
- testRunner.Then("response Status Code should be 204", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 77
- testRunner.Given("url is \'scripts/1234567890\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.And("request content is FILE(Requests\\2+3.xml)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 78
- testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I submit a put request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 79
+ testRunner.Then("response Status Code should be 204", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 82
+ testRunner.Given("url is \'scripts/1234567890\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 83
+ testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 84
  testRunner.Then("response Status Code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
@@ -262,20 +268,20 @@ this.FeatureBackground();
             table7.AddRow(new string[] {
                         "Program matches",
                         "\'var a = 2+3;\'",
-                        "FILE(Queries\\program.q)"});
-#line 80
+                        "FILE(Queries\\program.txt)"});
+#line 85
  testRunner.And("the following assertions against response should pass:", ((string)(null)), table7, "And ");
-#line 87
- testRunner.Given("url is \'scripts/1234567890\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 88
- testRunner.When("I submit a delete request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 89
- testRunner.Then("response Status Code should be 204", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 92
  testRunner.Given("url is \'scripts/1234567890\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 93
- testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I submit a delete request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 94
+ testRunner.Then("response Status Code should be 204", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 97
+ testRunner.Given("url is \'scripts/1234567890\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 98
+ testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 99
  testRunner.Then("response Status Code should be 404", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

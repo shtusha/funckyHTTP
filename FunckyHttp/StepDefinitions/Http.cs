@@ -50,19 +50,10 @@ namespace FunckyHttp.StepDefinitions
         }
 
         [Then(@"response header (.*) should be (.*)")]
-        public void ThenResponseHeaderShouldBe(string headerName, Wrapped<string> headerValue)
+        public void ThenResponseHeaderShouldBe(string headerName, Wrapped<string> expected)
         {
             ThenResponseHeaderShouldExist(headerName);
-            Assert.AreEqual(headerValue.Value, ScenarioContextStore.HttpCallContext.Headers[headerName]);
-        }
-
-        [Then(@"response header (.*) should contain (.*)")]
-        public void ThenResponseHeaderShouldContain(string headerName, Wrapped<string> headerValue)
-        {
-            ThenResponseHeaderShouldExist(headerName);
-            Assert.IsTrue(ScenarioContextStore.HttpCallContext.Headers[headerName].Contains(headerValue),
-                string.Format("{0} header: '{1}' does not contain '{2}'", 
-                    headerName, ScenarioContextStore.HttpCallContext.Headers[headerName], headerValue));
+            Assert.AreEqual(expected.Value, ScenarioContextStore.HttpCallContext.Headers[headerName]);
         }
 
         [Then(@"response Status Code should be (.*)")]
@@ -108,15 +99,7 @@ namespace FunckyHttp.StepDefinitions
             }
         }
 
-
         [Given(@"request content is (.*)")]
-        public void GivenRequestContentIs(Wrapped<string> content)
-        {
-            GivenRequestContentIsMultiline(content);
-        }
-
-
-        //[Given(@"request content is (.*)")]
         public void GivenRequestContentIs(byte[] content)
         {
             ScenarioContextStore.HttpCallContext.RequestContext.Content = content;

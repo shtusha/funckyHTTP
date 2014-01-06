@@ -103,7 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
-    <None Include="Content\Queries\program.q" />
+    <Content Include="Content\Queries\program.txt" />
     <Content Include="Content\Requests\1+2.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
