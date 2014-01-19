@@ -13,6 +13,12 @@ namespace FunckyHttp.Common
 {
     public static class ScenarioContextStore
     {
+        public static string JsonToXMLRootElementName
+        {
+            get { return ScenarioContext.Current.GetContextItem<string>("xml.fromJson.rootElementName"); }
+            set { ScenarioContext.Current["xml.fromJson.rootElementName"] = value; }
+        }
+
         public static XPathExpression Query
         {
             get { return ScenarioContext.Current.GetContextItem<XPathExpression>("xpath.query"); }

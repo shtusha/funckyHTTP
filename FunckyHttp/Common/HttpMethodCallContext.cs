@@ -46,7 +46,7 @@ namespace FunckyHttp.Common
 
             _HeadersLazy = new Lazy<WebHeaderCollection>(() => Response.Headers, true);
 
-            _XMLContentLazy = new Lazy<XPathDocument>(()=>Utils.BytesToXML(Content), true);
+            _XMLContentLazy = new Lazy<XPathDocument>(()=>Utils.BytesToXML(Content, Response.ContentType), true);
 
             _ContentLazy = new Lazy<byte[]>(() =>
             {
