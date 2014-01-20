@@ -22,16 +22,49 @@ namespace FunckyHttp.StepDefinitions
         [Given(@"xml namespace aliases are")]
         public void GivenTheFollowingXmlNamespaceAliases(Table table)
         {
-
             var nsMgr = new XmlNamespaceManager(new NameTable());
             foreach (var row in table.Rows)
             {
                 nsMgr.AddNamespace(row["alias"], row["namespace"]);
             }
-
             ScenarioContextStore.NamespaceManager = nsMgr;
         }
 
+
+        [Given(@"XslTransformation is (.*)")]
+        public void GivenXslTransformationIs(XslCompiledTransform xslt)
+        {
+            ScenarioContextStore.XSLTransform = xslt;
+        }
+
+        [Given(@"XslTransformation is")]
+        public void GivenXslTransformationIsMultiline(string xslt)
+        {
+            var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
+            using (var xsltReader = XmlTextReader.Create(new MemoryStream(Encoding.Default.GetBytes(xslt)), settings))
+            {
+                var transform = new XslCompiledTransform();
+                transform.Load(xsltReader);
+            }
+        }
+
+        [When(@"request content is transformed")]
+        public void WhenRequestContentIsTransformed()
+        {
+            Assert.IsNotNull(ScenarioContextStore.HttpCallContext.RequestContext.Content, "Request Content is null");
+            Assert.IsNotNull(ScenarioContextStore.XSLTransform, "XSL Transformation is null");
+            var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
+
+            using (var xmlReader = XmlTextReader.Create(new MemoryStream(ScenarioContextStore.HttpCallContext.RequestContext.Content), settings))
+            {
+                using (var ms = new MemoryStream())
+                {
+                    ScenarioContextStore.XSLTransform.Transform(xmlReader, XmlWriter.Create(ms, ScenarioContextStore.XSLTransform.OutputSettings));
+                    ms.Position = 0;
+                    ScenarioContextStore.HttpCallContext.RequestContext.Content = ms.ToArray();
+                }
+            }
+        }
 
         [When(@"the following query is run against response: (.*)")]
         public void WhenTheFollowingQueryIsRunAgainstResponse(Wrapped<string> qry)

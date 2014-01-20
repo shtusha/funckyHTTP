@@ -68,5 +68,7 @@ namespace FunckyHttp.Common
             }
             return null;
         }
+
+        public static XslCompiledTransform XSLTransform { get; set; }
     }
 }

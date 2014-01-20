@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Configuration;
 using TechTalk.SpecFlow;
 using FunckyHttp.StepDefinitions;
+using System.Xml.Xsl;
+using System.Xml;
 
 namespace FunckyHttp.Common
 {
@@ -54,6 +56,20 @@ namespace FunckyHttp.Common
         {
             return new RegexTargetMapper(() => ScenarioContextStore.QueryResult.ToString());
         }
+
+        [StepArgumentTransformation(@"FILE\((.*)\)")]
+        public XslCompiledTransform XsltFromFile(string path)
+        {
+            var uri = new Uri(GetFullPath(path)).AbsoluteUri;
+            var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
+            using (var xsltReader = XmlTextReader.Create(uri, settings))
+            {
+                var transform = new XslCompiledTransform();
+                transform.Load(xsltReader);
+                return transform;
+            }
+        }
+
 
         
         private static string GetFullPath(string path)
