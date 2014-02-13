@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using System.Xml.XPath;
 using TechTalk.SpecFlow;
 using FunckyHttp.StepDefinitions;
 using System.Xml.Xsl;
@@ -20,6 +21,13 @@ namespace FunckyHttp.Common
         {
             return value;
         }
+
+        [StepArgumentTransformation(@"query result")]
+        public Wrapped<string> StringFromLiteral()
+        {
+            return new Wrapped<string>(ScenarioContextStore.QueryResult.ToString());
+        }
+
 
         [StepArgumentTransformation(@"FILE\((.*)\)")]
         public Wrapped<string> StringFromFile(string path)
@@ -45,6 +53,27 @@ namespace FunckyHttp.Common
             throw new ArgumentException(string.Format("file not found: {0}", filePath ?? "<null>"));
         }
 
+        [StepArgumentTransformation(@"query result")]
+        public Wrapped<string> StringFromQueryResult()
+        {
+            if (ScenarioContextStore.QueryResult == null) { return null; }
+            var iterator = ScenarioContextStore.QueryResult as XPathNodeIterator;
+            if (iterator == null)
+            {
+                return ScenarioContextStore.QueryResult.ToString();
+            }
+            return iterator.Current.OuterXml;
+        }
+
+        [StepArgumentTransformation(@"query result")]
+        public byte[] BytesFromQueryResults()
+        {
+            var stringResult = StringFromQueryResult();
+            return stringResult == null ? null :
+                Encoding.Default.GetBytes(stringResult);
+        }
+
+
         [StepArgumentTransformation(@"response header (.*)")]
         public IRegexTarget RegexTargetFromHeader(string headerName)
         {
@@ -57,11 +86,14 @@ namespace FunckyHttp.Common
             return new RegexTargetMapper(() => ScenarioContextStore.QueryResult.ToString());
         }
 
+
+        //TODO: switch to uri instead of file.
         [StepArgumentTransformation(@"FILE\((.*)\)")]
         public XslCompiledTransform XsltFromFile(string path)
         {
             var uri = new Uri(GetFullPath(path)).AbsoluteUri;
             var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
+            //TODO: Cache
             using (var xsltReader = XmlTextReader.Create(uri, settings))
             {
                 var transform = new XslCompiledTransform();
@@ -70,8 +102,6 @@ namespace FunckyHttp.Common
             }
         }
 
-
-        
         private static string GetFullPath(string path)
         {
 

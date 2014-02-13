@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,14 @@ namespace FunckyHttp.StepDefinitions
     [Binding]
     public static class Common  
     {
+
+        [Given(@"all is cool"), When(@"all is cool"),Then(@"all is cool")]
+        public static void ThenAllIsCool()
+        {
+            Debug.WriteLine("All is cool");
+        }
+
+
         [Then("(.*) should match (.*)")]
         public static void ShouldMatchRegex(IRegexTarget target, Wrapped<string> pattern)
         {

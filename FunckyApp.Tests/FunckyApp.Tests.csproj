@@ -104,6 +104,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BasicTests.feature</DependentUpon>
     </Compile>
+    <Compile Include="Features\WebAPIToWCF.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebAPIToWCF.feature</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +122,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\Requests\3+4.js" />
+    <Content Include="Content\XSLT\ScriptToSOAPGetScriptStatsRequest.xslt">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="Features\Json.feature">
@@ -126,6 +134,10 @@
     <None Include="Features\BasicTests.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>BasicTests.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\WebAPIToWCF.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>WebAPIToWCF.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

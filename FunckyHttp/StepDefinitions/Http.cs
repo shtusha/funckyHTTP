@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net;
@@ -27,19 +28,17 @@ namespace FunckyHttp.StepDefinitions
         [Given(@"url is (.*)")]
         public void GivenUrlIs(Wrapped<string> url)
         {
-
-            var _url = url.Value;
-            if (_url.StartsWith("/") && ScenarioContextStore.BaseUrl.EndsWith("/"))
+            Uri uri;
+            if (Uri.TryCreate(url, UriKind.Absolute, out uri) ||
+                Uri.TryCreate(new Uri(ScenarioContextStore.BaseUrl), url, out uri))
             {
-                _url = _url.Remove(0, 1);
+                ScenarioContextStore.HttpCallContext = new HttpMethodCallContext(uri.AbsoluteUri, ScenarioContextStore.RequestHeaders);
             }
-            else if (!(_url.StartsWith("/") || ScenarioContextStore.BaseUrl.EndsWith("/")))
+            else
             {
-                _url = _url.Insert(0, "/");
+                throw new ArgumentException(string.Format("Invalid url: {0}. Base Url: {1}", url ?? "<null>", ScenarioContextStore.BaseUrl ?? "<null>" ));
             }
 
-            //TODO handle absolute vs relative urls.
-            ScenarioContextStore.HttpCallContext = new HttpMethodCallContext(ScenarioContextStore.BaseUrl + _url, ScenarioContextStore.RequestHeaders);
         }
 
         [Then(@"response header (.*) should exist")]

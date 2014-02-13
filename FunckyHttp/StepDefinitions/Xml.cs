@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using System.Text;
@@ -55,6 +56,8 @@ namespace FunckyHttp.StepDefinitions
             Assert.IsNotNull(ScenarioContextStore.XSLTransform, "XSL Transformation is null");
             var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
 
+            Debug.WriteLine("XML content prior to transform:{0}{1}", Environment.NewLine, ScenarioContextStore.HttpCallContext.RequestContext.Content.BytesToXML("xml").CreateNavigator().InnerXml);
+            
             using (var xmlReader = XmlTextReader.Create(new MemoryStream(ScenarioContextStore.HttpCallContext.RequestContext.Content), settings))
             {
                 using (var ms = new MemoryStream())
@@ -64,6 +67,7 @@ namespace FunckyHttp.StepDefinitions
                     ScenarioContextStore.HttpCallContext.RequestContext.Content = ms.ToArray();
                 }
             }
+            Debug.WriteLine("XML content after transform:{0}{1}", Environment.NewLine, ScenarioContextStore.HttpCallContext.RequestContext.Content.BytesToXML("xml").CreateNavigator().InnerXml);
         }
 
         [When(@"the following query is run against response: (.*)")]
