@@ -46,12 +46,12 @@ Scenario: JSON post to SOAP service
 	| Program matches | 'var foo = 3 + 3 + 4;' | 'string(//a:Program/text())' |
 	
 	#running this query to use entire response in next request
-	When the following query is run against response: '/a:Script'
-	Then all is cool
+	#this is a hack need to provide a way to access properties of last request untill the request is submitted.
+	#When the following query is run against response: '/a:Script'
+	#Then all is cool
 
 	#ready to build the SOAP call
 	Given url is 'http://localhost:37580/Services/ScriptCompilerService.svc'
-	And request content is query result
 	And request headers are
 	| name         | value                                                                                      |
 	| Accept       | application/xml                                                                            |
@@ -59,8 +59,8 @@ Scenario: JSON post to SOAP service
 	| SOAPAction   | http://schemas.datacontract.org/2004/07/FunckyApp.Services/CompilerServices/GetScriptStats |
 
 	And XslTransformation is FILE(XSLt\ScriptToSOAPGetScriptStatsRequest.xslt)
-	
-	When request content is transformed
+	When response is transformed into request content
+	#When query result is transformed into request content
 	And I submit a post request
 
 	Then response Status Code should be 200

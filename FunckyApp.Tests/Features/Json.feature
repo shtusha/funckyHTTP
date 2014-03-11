@@ -10,7 +10,7 @@ Background:
 
 
 @rootElementName @Script
-Scenario: Insert JSON script
+Scenario: Insert script (JSON)
 
 	Given url is 'scripts/'
 	And request content is FILE(Requests\3+4.js)
@@ -28,7 +28,7 @@ Scenario: Insert JSON script
 	When the following query is run against response: 'string(//Program/text())'
 	Then query result should match 'var a = \d \+ \d;'
 
-Scenario: Put/Delete script
+Scenario: Put/Delete script (JSON)
 
 #First put a document
 	Given url is 'scripts/3plus4'

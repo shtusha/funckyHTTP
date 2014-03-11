@@ -32,7 +32,18 @@ namespace FunckyHttp.StepDefinitions
             if (Uri.TryCreate(url, UriKind.Absolute, out uri) ||
                 Uri.TryCreate(new Uri(ScenarioContextStore.BaseUrl), url, out uri))
             {
-                ScenarioContextStore.HttpCallContext = new HttpMethodCallContext(uri.AbsoluteUri, ScenarioContextStore.RequestHeaders);
+                HttpMethodCallContext.ResponseContext lastResponse = null;
+                if (ScenarioContextStore.HttpCallContext != null)
+                {
+                    lastResponse = ScenarioContextStore.HttpCallContext.Response;
+                }
+
+                ScenarioContextStore.HttpCallContext = new HttpMethodCallContext(uri.AbsoluteUri, ScenarioContextStore.RequestHeaders)
+                {
+                    LastResponse = lastResponse
+                };
+                
+                //need this so that we can use properties of previous response to build next request.
             }
             else
             {
@@ -44,7 +55,7 @@ namespace FunckyHttp.StepDefinitions
         [Then(@"response header (.*) should exist")]
         public void ThenResponseHeaderShouldExist(string headerName)
         {
-            Assert.IsTrue(ScenarioContextStore.HttpCallContext.Headers.AllKeys.Contains(headerName), 
+            Assert.IsTrue(ScenarioContextStore.HttpCallContext.Response.Headers.AllKeys.Contains(headerName), 
                 "{0} header was expected, but was not returned.", headerName);
         }
 
@@ -52,19 +63,19 @@ namespace FunckyHttp.StepDefinitions
         public void ThenResponseHeaderShouldBe(string headerName, Wrapped<string> expected)
         {
             ThenResponseHeaderShouldExist(headerName);
-            Assert.AreEqual(expected.Value, ScenarioContextStore.HttpCallContext.Headers[headerName]);
+            Assert.AreEqual(expected.Value, ScenarioContextStore.HttpCallContext.Response.Headers[headerName]);
         }
 
         [Then(@"response Status Code should be (.*)")]
         public void ThenResponseStatusCodeShouldBe(HttpStatusCode statusCode)
         {
-            Assert.AreEqual(statusCode, ScenarioContextStore.HttpCallContext.StatusCode);
+            Assert.AreEqual(statusCode, ScenarioContextStore.HttpCallContext.Response.StatusCode);
         }
 
         [When(@"*submit a (.*) request")]
         public void WhenSubmitARequest(string requestMethod)
         {
-            ScenarioContextStore.HttpCallContext.RequestContext.Verb = requestMethod.ToUpper();
+            ScenarioContextStore.HttpCallContext.Request.Verb = requestMethod.ToUpper();
         }
 
 
@@ -79,10 +90,10 @@ namespace FunckyHttp.StepDefinitions
 
             if(ScenarioContextStore.HttpCallContext != null)
             {
-                ScenarioContextStore.HttpCallContext.RequestContext.Headers.Clear();
+                ScenarioContextStore.HttpCallContext.Request.Headers.Clear();
                 foreach (var row in table.Rows)
                 {
-                    ScenarioContextStore.HttpCallContext.RequestContext.Headers[row["name"]] = row["value"];
+                    ScenarioContextStore.HttpCallContext.Request.Headers[row["name"]] = row["value"];
                 }
 
             }
@@ -94,14 +105,14 @@ namespace FunckyHttp.StepDefinitions
         {
             foreach (var row in table.Rows)
             {
-                ScenarioContextStore.HttpCallContext.RequestContext.Headers[row["name"]] = row["value"];
+                ScenarioContextStore.HttpCallContext.Request.Headers[row["name"]] = row["value"];
             }
         }
 
         [Given(@"request content is (.*)")]
         public void GivenRequestContentIs(byte[] content)
         {
-            ScenarioContextStore.HttpCallContext.RequestContext.Content = content;
+            ScenarioContextStore.HttpCallContext.Request.Content = content;
         }
 
         [Given(@"request content is")]

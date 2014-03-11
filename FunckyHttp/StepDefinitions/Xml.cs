@@ -49,31 +49,38 @@ namespace FunckyHttp.StepDefinitions
             }
         }
 
-        [When(@"request content is transformed")]
-        public void WhenRequestContentIsTransformed()
+
+        [When(@"(.*) is transformed into (.*)")]
+        public void WhenSourceIsTransformedInto(IXsltSource source, IXsltResult destination)
         {
-            Assert.IsNotNull(ScenarioContextStore.HttpCallContext.RequestContext.Content, "Request Content is null");
             Assert.IsNotNull(ScenarioContextStore.XSLTransform, "XSL Transformation is null");
             var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
+            //Debug.WriteLine("XML content prior to transform:{0}{1}", Environment.NewLine, source.TransformationSource.BytesToXML("xml").CreateNavigator().InnerXml);
 
-            Debug.WriteLine("XML content prior to transform:{0}{1}", Environment.NewLine, ScenarioContextStore.HttpCallContext.RequestContext.Content.BytesToXML("xml").CreateNavigator().InnerXml);
-            
-            using (var xmlReader = XmlTextReader.Create(new MemoryStream(ScenarioContextStore.HttpCallContext.RequestContext.Content), settings))
+            //using (var xmlReader = XmlTextReader.Create(new MemoryStream(ScenarioContextStore.HttpCallContext.RequestContext.Content), settings))
+            using (var xmlReader = XmlTextReader.Create(new MemoryStream(source.TransformationSource), settings))
             {
                 using (var ms = new MemoryStream())
                 {
                     ScenarioContextStore.XSLTransform.Transform(xmlReader, XmlWriter.Create(ms, ScenarioContextStore.XSLTransform.OutputSettings));
                     ms.Position = 0;
-                    ScenarioContextStore.HttpCallContext.RequestContext.Content = ms.ToArray();
+                    destination.TransformedResult = ms.ToArray();
+                    //ScenarioContextStore.HttpCallContext.RequestContext.Content = ms.ToArray();
                 }
             }
-            Debug.WriteLine("XML content after transform:{0}{1}", Environment.NewLine, ScenarioContextStore.HttpCallContext.RequestContext.Content.BytesToXML("xml").CreateNavigator().InnerXml);
         }
+
+        [When(@"(.*) is transformed")]
+        public void WhenTransformed(IXslTransformable transformable)
+        {
+            WhenSourceIsTransformedInto(transformable, transformable);
+        }
+
 
         [When(@"the following query is run against response: (.*)")]
         public void WhenTheFollowingQueryIsRunAgainstResponse(Wrapped<string> qry)
         {
-            ExecuteXpathQuery(ScenarioContextStore.HttpCallContext.XMLContent, qry);
+            ExecuteXpathQuery(ScenarioContextStore.HttpCallContext.Response.XMLContent, qry);
         }
 
         [When(@"the following query is run against response:")] // multiline
@@ -86,7 +93,7 @@ namespace FunckyHttp.StepDefinitions
         [When(@"the following query is run against request: (.*)")]
         public void WhenTheFollowingQueryIsRunAgainstRequest(Wrapped<string> qry)
         {
-            ExecuteXpathQuery(ScenarioContextStore.HttpCallContext.XMLContent, qry);
+            ExecuteXpathQuery(ScenarioContextStore.HttpCallContext.Response.XMLContent, qry);
         }
 
         [When(@"the following query is run against request:")] // multiline
@@ -183,4 +190,28 @@ namespace FunckyHttp.StepDefinitions
 
         }
     }
+
+    public interface IXsltSource
+    {
+        byte[] TransformationSource { get; }
+    }
+
+    public class XsltSource : IXsltSource
+    {
+        public XsltSource(byte[] source)
+        {
+            TransformationSource = source;
+        }
+
+        public byte[] TransformationSource { get; private set; }
+    }
+
+    public interface IXsltResult
+    {
+        byte[] TransformedResult { set; }
+    }
+
+
+    public interface IXslTransformable: IXsltSource, IXsltResult { }
+
 }

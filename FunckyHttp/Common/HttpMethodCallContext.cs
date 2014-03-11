@@ -12,13 +12,21 @@ namespace FunckyHttp.Common
 {
     public class HttpMethodCallContext
     {
-        private Lazy<HttpWebResponse> _ResponseLazy;
-        private Lazy<byte[]> _ContentLazy;
-        private Lazy<XPathDocument> _XMLContentLazy;
-        private Lazy<HttpStatusCode> _StatusCodeLazy;
-        private Lazy<WebHeaderCollection> _HeadersLazy;
-        public Request RequestContext { get; private set; }
 
+        private Lazy<ResponseContext> _ResponseLazy;
+
+        public ResponseContext LastResponse { get; set; }
+
+        public RequestContext Request { get; private set; }
+
+
+
+        public ResponseContext Response
+        {
+            get { return Request.Verb != null ? _ResponseLazy.Value : LastResponse; }
+        }
+ 
+        
 
 
         public HttpMethodCallContext(string url, IDictionary<string, string> headers)
@@ -26,45 +34,77 @@ namespace FunckyHttp.Common
         {
             foreach (var item in headers)
             {
-                RequestContext.Headers.Add(item.Key, item.Value);    
+                Request.Headers.Add(item.Key, item.Value);    
             }
         }
 
 
         public HttpMethodCallContext(string url)
-            : this()
         {
-            RequestContext = new Request(url);
+            Request = new RequestContext(url);
+            _ResponseLazy = new Lazy<ResponseContext>(() => new ResponseContext(Request.BuildWebRequest()), true);
         }
             
-        private HttpMethodCallContext()
+        public class ResponseContext
         {
+            private Lazy<HttpWebResponse> _ResponseLazy;
+            private Lazy<byte[]> _ContentLazy;
+            private Lazy<XPathDocument> _XMLContentLazy;
+            private Lazy<HttpStatusCode> _StatusCodeLazy;
+            private Lazy<WebHeaderCollection> _HeadersLazy;
 
-            _ResponseLazy = new Lazy<HttpWebResponse>(() => InvokeHttpRequest(RequestContext.BuildWebRequest()), true);
+            private HttpWebRequest _WebRequest;
 
-            _StatusCodeLazy = new Lazy<HttpStatusCode>(() => Response.StatusCode, true);
-
-            _HeadersLazy = new Lazy<WebHeaderCollection>(() => Response.Headers, true);
-
-            _XMLContentLazy = new Lazy<XPathDocument>(()=>Utils.BytesToXML(Content, Response.ContentType), true);
-
-            _ContentLazy = new Lazy<byte[]>(() =>
+            public ResponseContext(HttpWebRequest request)
             {
-                using (var ms = new MemoryStream())
+                _WebRequest = request;
+
+                _ResponseLazy = new Lazy<HttpWebResponse>(() => InvokeHttpRequest(_WebRequest), true);
+
+                _StatusCodeLazy = new Lazy<HttpStatusCode>(() => HttpResponse.StatusCode, true);
+
+                _HeadersLazy = new Lazy<WebHeaderCollection>(() => HttpResponse.Headers, true);
+
+                _XMLContentLazy = new Lazy<XPathDocument>(() => Utils.BytesToXML(Content, HttpResponse.ContentType), true);
+
+                _ContentLazy = new Lazy<byte[]>(() =>
                 {
-                    var responseStream = Response.GetResponseStream();
-                    if (responseStream != null)
+                    using (var ms = new MemoryStream())
                     {
-                        responseStream.CopyTo(ms);
+                        var responseStream = HttpResponse.GetResponseStream();
+                        if (responseStream != null)
+                        {
+                            responseStream.CopyTo(ms);
+                        }
+                        return ms.ToArray();
                     }
-                    return ms.ToArray();
+                }, true);
+            }
+
+            private HttpWebResponse HttpResponse { get { return _ResponseLazy.Value; } }
+            public HttpStatusCode StatusCode { get { return _StatusCodeLazy.Value; } }
+            public byte[] Content { get { return _ContentLazy.Value; } }
+            public WebHeaderCollection Headers { get { return _HeadersLazy.Value; } }
+            public XPathDocument XMLContent { get { return _XMLContentLazy.Value; } }
+
+            private HttpWebResponse InvokeHttpRequest(HttpWebRequest request)
+            {
+                try
+                {
+                    var response = (HttpWebResponse)request.GetResponse();
+                    return response;
                 }
-            }, true);
+                catch (WebException ex)
+                {
+                    if (ex.Response as HttpWebResponse == null) { throw; }
+                    return ex.Response as HttpWebResponse;
+                }
+            }
         }
 
-        public class Request
+        public class RequestContext
         {
-            public Request(string url)
+            public RequestContext(string url)
             {
                 Url = url;
                 Headers = new Dictionary<string, string>();
@@ -143,24 +183,6 @@ namespace FunckyHttp.Common
         }
         
 
-        private HttpWebResponse Response { get { return _ResponseLazy.Value; } }
-        public HttpStatusCode StatusCode { get { return _StatusCodeLazy.Value; } }
-        public byte[] Content { get { return _ContentLazy.Value; } }
-        public WebHeaderCollection Headers { get { return _HeadersLazy.Value; } }
-        public XPathDocument XMLContent { get { return _XMLContentLazy.Value; } }
-
-        private HttpWebResponse InvokeHttpRequest(HttpWebRequest request)
-        {
-            try
-            {
-                var response = (HttpWebResponse)request.GetResponse();
-                return response;
-            }
-            catch (WebException ex)
-            {
-                if (ex.Response as HttpWebResponse == null) { throw; }
-                return ex.Response as HttpWebResponse;
-            }
-        }
+        
     }
 }

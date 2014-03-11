@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using System.Xml.XPath;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TechTalk.SpecFlow;
 using FunckyHttp.StepDefinitions;
 using System.Xml.Xsl;
@@ -77,7 +78,7 @@ namespace FunckyHttp.Common
         [StepArgumentTransformation(@"response header (.*)")]
         public IRegexTarget RegexTargetFromHeader(string headerName)
         {
-            return new RegexTargetMapper(()=> ScenarioContextStore.HttpCallContext.Headers[headerName]);
+            return new RegexTargetMapper(()=> ScenarioContextStore.HttpCallContext.Response.Headers[headerName]);
         }
 
         [StepArgumentTransformation(@"query result")]
@@ -85,7 +86,6 @@ namespace FunckyHttp.Common
         {
             return new RegexTargetMapper(() => ScenarioContextStore.QueryResult.ToString());
         }
-
 
         //TODO: switch to uri instead of file.
         [StepArgumentTransformation(@"FILE\((.*)\)")]
@@ -100,6 +100,44 @@ namespace FunckyHttp.Common
                 transform.Load(xsltReader);
                 return transform;
             }
+        }
+
+        class RequestContentTransform : IXslTransformable
+        {
+            public byte[] TransformationSource { get { return ScenarioContextStore.HttpCallContext.Request.Content; } }
+            public byte[] TransformedResult { set { ScenarioContextStore.HttpCallContext.Request.Content = value; } }
+
+        }
+
+        [StepArgumentTransformation(@"query result")]
+        public IXsltSource XsltSourceFromQueryResult()
+        {
+            return new XsltSource(BytesFromQueryResults());
+        }
+
+        [StepArgumentTransformation(@"response")]
+        public IXsltSource XsltSourceFromResponseContent()
+        {
+            return new XsltSource(ScenarioContextStore.HttpCallContext.Response.Content);
+        }
+
+        [StepArgumentTransformation(@"request content")]
+        public IXslTransformable XsltTransformableFromRequestContent()
+        {
+            Assert.IsNotNull(ScenarioContextStore.HttpCallContext.Request.Content, "Request Content is null");
+            return new RequestContentTransform();
+        }
+
+        [StepArgumentTransformation(@"request content")]
+        public IXsltResult XsltResultToRequestContent()
+        {
+            return new RequestContentTransform();
+        }
+
+        [StepArgumentTransformation(@"request content")]
+        public IXsltSource XsltSourceFromRequestContent()
+        {
+            return XsltTransformableFromRequestContent();
         }
 
         private static string GetFullPath(string path)
