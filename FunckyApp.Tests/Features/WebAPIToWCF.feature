@@ -3,15 +3,15 @@
 	to various types of http endpoints.
 
 	Background: 
-	
-	Given xml namespace aliases are
+	Given base url is 'http://localhost:37580/'
+	And xml namespace aliases are
 	| alias | namespace                                                |
 	| a     | http://schemas.datacontract.org/2004/07/FunckyApp.Models |
 
 Scenario: JSON post to SOAP service
 
 	#first post new script
-	Given url is 'scripts/'
+	Given url is 'api/scripts/'
 	And request headers are
 	| name         | value            |
 	| Accept       | application/json |
@@ -28,7 +28,7 @@ Scenario: JSON post to SOAP service
 	Then response Status Code should be 200
 
 	#build url for next request by extracting Id from response
-	When the following query is run against response: 'concat("scripts/", //Id/text())'
+	When the following query is run against response: 'concat("api/scripts/", //Id/text())'
 	Then all is cool
 
 	Given url is query result
@@ -45,22 +45,18 @@ Scenario: JSON post to SOAP service
 	| Name matches    | 'Foo'                  | 'string(//a:Name/text())'    |
 	| Program matches | 'var foo = 3 + 3 + 4;' | 'string(//a:Program/text())' |
 	
-	#running this query to use entire response in next request
-	#this is a hack need to provide a way to access properties of last request untill the request is submitted.
-	#When the following query is run against response: '/a:Script'
-	#Then all is cool
-
+	
 	#ready to build the SOAP call
-	Given url is 'http://localhost:37580/Services/ScriptCompilerService.svc'
+	Given url is 'Services/ScriptCompilerService.svc'
 	And request headers are
 	| name         | value                                                                                      |
 	| Accept       | application/xml                                                                            |
 	| Content-Type | text/xml; charset=utf-8                                                                    |
 	| SOAPAction   | http://schemas.datacontract.org/2004/07/FunckyApp.Services/CompilerServices/GetScriptStats |
 
-	And XslTransformation is FILE(XSLt\ScriptToSOAPGetScriptStatsRequest.xslt)
+	#use xslt tot transform response from previous request into a SOAP request to CompilerServices
+	And XslTransformation is FILE(XSLT\ScriptToSOAPGetScriptStatsRequest.xslt)
 	When response is transformed into request content
-	#When query result is transformed into request content
 	And I submit a post request
 
 	Then response Status Code should be 200
