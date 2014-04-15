@@ -8,6 +8,9 @@
 	| alias | namespace                                                |
 	| a     | http://schemas.datacontract.org/2004/07/FunckyApp.Models |
 
+
+@optionStrict
+
 Scenario: JSON post to SOAP service
 
 	#first post new script

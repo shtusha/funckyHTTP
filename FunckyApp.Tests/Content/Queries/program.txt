@@ -1,1 +1,1 @@
-﻿string(//a:Program/text())
+﻿string(//Program/text())
