@@ -14,11 +14,12 @@ namespace FunckyHttp.Common
             ScenarioContextStore.RequestHeaders = new Dictionary<string, string>();
             ScenarioContextStore.BaseUrl = ConfigurationManager.AppSettings["baseUrl"];
             ScenarioContextStore.NamespaceManager = new XmlNamespaceManager(new NameTable());
+            ScenarioContextStore.StripXmlNamespaces = true;
         }
 
 
         private const string RootElemnetNameTag = "rootElementName";
-        [BeforeScenario("rootElementName")]
+        [BeforeScenario(RootElemnetNameTag)]
         public static void BeforeJsonToXMLScenario()
         {
             var tags = ScenarioContext.Current.ScenarioInfo.Tags;
@@ -30,6 +31,12 @@ namespace FunckyHttp.Common
                     return;
                 }
             }
+        }
+
+        [BeforeScenario("optionStrict")] // :)
+        public static void BeforeStrictScenario()
+        {
+            ScenarioContextStore.StripXmlNamespaces = false;
         }
     }
 }

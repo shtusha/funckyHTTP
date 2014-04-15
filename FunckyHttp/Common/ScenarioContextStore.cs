@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Xml.XPath;
 using System.Xml;
 using System.Xml.Xsl;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using TechTalk.SpecFlow;
 
 
@@ -17,6 +19,12 @@ namespace FunckyHttp.Common
         {
             get { return ScenarioContext.Current.GetContextItem<string>("xml.fromJson.rootElementName"); }
             set { ScenarioContext.Current["xml.fromJson.rootElementName"] = value; }
+        }
+
+        public static bool StripXmlNamespaces 
+        {
+            get { return (bool)ScenarioContext.Current["xml.eliminatenamespaces"]; }
+            set { ScenarioContext.Current["xml.eliminatenamespaces"] = value; }
         }
 
         public static XPathExpression Query

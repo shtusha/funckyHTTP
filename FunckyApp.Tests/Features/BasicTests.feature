@@ -7,12 +7,7 @@ Background:
 	| name         | value           |
 	| Accept       | application/xml |
 	| Content-Type | text/xml        |
-
-	And xml namespace aliases are
-	| alias | namespace                                                |
-	| a     | http://schemas.datacontract.org/2004/07/FunckyApp.Models |
-
-	
+		
 Scenario: Edge cases
 
 #Get non existent script
@@ -61,10 +56,10 @@ Scenario: Insert script
 	
 	Then response Status Code should be 200
 	And the following assertions against response should pass:
-	| name                    | expected         | query                     |
-	| Id Exists               | 1                | 'count(a:Script/a:Id)'    |
-	| Name matches            | 'Test'           | 'string(//a:Name/text())' |
-	| Program matches         | 'var a = 1 + 2;' | FILE(Queries\program.txt)   |
+	| name            | expected         | query                     |
+	| Id Exists       | 1                | 'count(Script/Id)'        |
+	| Name matches    | 'Test'           | 'string(//Name/text())'   |
+	| Program matches | 'var a = 1 + 2;' | FILE(Queries\program.txt) |
 	
 	#repeats last test from table above
 	When the following query is run against response: FILE(Queries\program.txt)
@@ -84,8 +79,8 @@ Scenario: Put/Delete script
 	Then response Status Code should be 200
 	And the following assertions against response should pass:
 	| name            | expected       | query                     |
-	| Id matches      | '1234567890'   | 'string(//a:Id/text())'   |
-	| Name matches    | 'Test'         | 'string(//a:Name/text())' |
+	| Id matches      | '1234567890'   | 'string(//Id/text())'   |
+	| Name matches    | 'Test'         | 'string(//Name/text())' |
 	| Program matches | 'var a = 2+3;' | FILE(Queries\program.txt)   |
 
 #Delete the document
