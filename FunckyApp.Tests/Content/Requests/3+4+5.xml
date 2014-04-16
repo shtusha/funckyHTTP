@@ -1,0 +1,4 @@
+﻿<Script xmlns="http://schemas.datacontract.org/2004/07/FunckyApp.Models">
+  <Name>3+4</Name>
+  <Program>var a = 3 + 4 + 5;</Program>
+</Script>

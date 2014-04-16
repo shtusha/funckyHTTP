@@ -9,7 +9,7 @@
 	| a     | http://schemas.datacontract.org/2004/07/FunckyApp.Models |
 
 
-@optionStrict
+@xml.namespaces.keep
 
 Scenario: JSON post to SOAP service
 

@@ -22,7 +22,7 @@ namespace FunckyHttp.Common
         static Utils()
         {
             var assembly = Assembly.GetAssembly(typeof(Utils));
-            var stream = assembly.GetManifestResourceStream("FunckyHttp.resources.StripXmlNamespaces.xslt");
+            var stream = assembly.GetManifestResourceStream("FunckyHttp.resources.DropXmlNamespaces.xslt");
             
             
             using (var reader = new XmlTextReader(stream))
@@ -47,7 +47,7 @@ namespace FunckyHttp.Common
             using (var reader = XmlTextReader.Create(new MemoryStream(bytes), new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment }))
             {
                 //option strict
-                if (!ScenarioContextStore.StripXmlNamespaces)
+                if (!ScenarioContextStore.DropXmlNamespaces)
                 {
                     return  new XPathDocument(reader);
                 }
