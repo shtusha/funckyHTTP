@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Xml;
 using TechTalk.SpecFlow;
-
+using System.Text;
 namespace FunckyHttp.Common
 {
     [Binding]
@@ -14,7 +15,8 @@ namespace FunckyHttp.Common
             ScenarioContextStore.RequestHeaders = new Dictionary<string, string>();
             ScenarioContextStore.BaseUrl = ConfigurationManager.AppSettings["baseUrl"];
             ScenarioContextStore.NamespaceManager = new XmlNamespaceManager(new NameTable());
-            ScenarioContextStore.StripXmlNamespaces = true;
+            ScenarioContextStore.DropXmlNamespaces = (ConfigurationManager.AppSettings["xml.namespaces.drop"] ?? "true")
+                .Equals("true", StringComparison.CurrentCultureIgnoreCase);
         }
 
 
@@ -33,10 +35,16 @@ namespace FunckyHttp.Common
             }
         }
 
-        [BeforeScenario("optionStrict")] // :)
-        public static void BeforeStrictScenario()
+        [BeforeScenario("xml.namespaces.keep")]
+        public static void KeepXmlNamespaces()
         {
-            ScenarioContextStore.StripXmlNamespaces = false;
+            ScenarioContextStore.DropXmlNamespaces = false;
+        }
+
+        [BeforeScenario("xml.namespaces.drop")]
+        public static void DropXmlNamespaces()
+        {
+            ScenarioContextStore.DropXmlNamespaces = true;
         }
     }
 }

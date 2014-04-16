@@ -21,10 +21,10 @@ namespace FunckyHttp.Common
             set { ScenarioContext.Current["xml.fromJson.rootElementName"] = value; }
         }
 
-        public static bool StripXmlNamespaces 
+        public static bool DropXmlNamespaces 
         {
-            get { return (bool)ScenarioContext.Current["xml.eliminatenamespaces"]; }
-            set { ScenarioContext.Current["xml.eliminatenamespaces"] = value; }
+            get { return (bool)ScenarioContext.Current["xml.namespaces.drop"]; }
+            set { ScenarioContext.Current["xml.namespaces.drop"] = value; }
         }
 
         public static XPathExpression Query
