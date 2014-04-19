@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -95,8 +96,9 @@ namespace FunckyHttp.StepDefinitions
                 {
                     ScenarioContextStore.HttpCallContext.Request.Headers[row["name"]] = row["value"];
                 }
-
             }
+            Debug.WriteLine("http.request.headers:");
+            ScenarioContextStore.RequestHeaders.ToList().ForEach(a=>Debug.WriteLine("{0} : {1}", a.Key, a.Value));
 
         }
 
@@ -107,6 +109,8 @@ namespace FunckyHttp.StepDefinitions
             {
                 ScenarioContextStore.HttpCallContext.Request.Headers[row["name"]] = row["value"];
             }
+            Debug.WriteLine("http.request.headers:");
+            ScenarioContextStore.HttpCallContext.Request.Headers.ToList().ForEach(a => Debug.WriteLine("{0} : {1}", a.Key, a.Value));
         }
 
         [Given(@"request content is (.*)")]

@@ -24,7 +24,7 @@ Scenario Outline: CommonValidations
 	| SOAPAction   | http://schemas.datacontract.org/2004/07/FunckyApp.Services/CompilerServices/GetScriptStats |
 
 	#use xslt to transform request content into a SOAP request to CompilerServices
-	And XslTransformation is FILE(XSLT\ScriptToSOAPGetScriptStatsRequest.xslt)
+	And xslt is FILE(XSLT\ScriptToSOAPGetScriptStatsRequest.xslt)
 	When request content is transformed
 	And I submit a post request
 

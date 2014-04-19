@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -92,13 +93,24 @@ namespace FunckyHttp.Common
         public XslCompiledTransform XsltFromFile(string path)
         {
             var uri = new Uri(GetFullPath(path)).AbsoluteUri;
+            Debug.WriteLine("xml.transform.source: {0}", (object)uri);
             var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
             //TODO: Cache
+            LogXSLTContent(uri, settings);
             using (var xsltReader = XmlTextReader.Create(uri, settings))
             {
+                             
                 var transform = new XslCompiledTransform();
                 transform.Load(xsltReader);
                 return transform;
+            }
+        }
+
+        private static void LogXSLTContent(string uri, XmlReaderSettings settings)
+        {
+            using (var xsltReader = XmlTextReader.Create(uri, settings))
+            {
+                Debug.WriteLine("xml.transform: {0}", (object)new XPathDocument(xsltReader).CreateNavigator().InnerXml);
             }
         }
 
