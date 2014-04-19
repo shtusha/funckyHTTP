@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Net;
@@ -7,13 +8,14 @@ using System.Threading.Tasks;
 using System.Collections;
 using System.Xml.XPath;
 using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FunckyHttp.Common
 {
     public class HttpMethodCallContext
     {
 
-        private Lazy<ResponseContext> _ResponseLazy;
+        private readonly Lazy<ResponseContext> _responseLazy;
 
         public ResponseContext LastResponse { get; set; }
 
@@ -23,7 +25,7 @@ namespace FunckyHttp.Common
 
         public ResponseContext Response
         {
-            get { return Request.Verb != null ? _ResponseLazy.Value : LastResponse; }
+            get { return Request.Verb != null ? _responseLazy.Value : LastResponse; }
         }
  
         
@@ -42,16 +44,16 @@ namespace FunckyHttp.Common
         public HttpMethodCallContext(string url)
         {
             Request = new RequestContext(url);
-            _ResponseLazy = new Lazy<ResponseContext>(() => new ResponseContext(Request.BuildWebRequest()), true);
+            _responseLazy = new Lazy<ResponseContext>(() => new ResponseContext(Request.BuildWebRequest()), true);
         }
             
         public class ResponseContext
         {
             private Lazy<HttpWebResponse> _ResponseLazy;
             private Lazy<byte[]> _ContentLazy;
-            private Lazy<XPathDocument> _XMLContentLazy;
+            private Lazy<XPathDocument> _xmlContentLazy;
             private Lazy<HttpStatusCode> _StatusCodeLazy;
-            private Lazy<WebHeaderCollection> _HeadersLazy;
+            private Lazy<WebHeaderCollection> _headersLazy;
 
             private HttpWebRequest _WebRequest;
 
@@ -63,9 +65,9 @@ namespace FunckyHttp.Common
 
                 _StatusCodeLazy = new Lazy<HttpStatusCode>(() => HttpResponse.StatusCode, true);
 
-                _HeadersLazy = new Lazy<WebHeaderCollection>(() => HttpResponse.Headers, true);
+                _headersLazy = new Lazy<WebHeaderCollection>(() => HttpResponse.Headers, true);
 
-                _XMLContentLazy = new Lazy<XPathDocument>(() => Utils.BytesToXML(Content, HttpResponse.ContentType), true);
+                _xmlContentLazy = new Lazy<XPathDocument>(() => Content.BytesToXML(HttpResponse.ContentType), true);
 
                 _ContentLazy = new Lazy<byte[]>(() =>
                 {
@@ -82,10 +84,54 @@ namespace FunckyHttp.Common
             }
 
             private HttpWebResponse HttpResponse { get { return _ResponseLazy.Value; } }
-            public HttpStatusCode StatusCode { get { return _StatusCodeLazy.Value; } }
-            public byte[] Content { get { return _ContentLazy.Value; } }
-            public WebHeaderCollection Headers { get { return _HeadersLazy.Value; } }
-            public XPathDocument XMLContent { get { return _XMLContentLazy.Value; } }
+
+            public HttpStatusCode StatusCode
+            {
+                get
+                {
+                    if (!_StatusCodeLazy.IsValueCreated)
+                    {
+                        Debug.WriteLine("http.response.statuscode: {0}", _StatusCodeLazy.Value);
+                    }
+                    return _StatusCodeLazy.Value;
+                }
+            }
+
+            public byte[] Content
+            {
+                get
+                {
+                    if (!_ContentLazy.IsValueCreated)
+                    {
+                        using (var reader = new StreamReader(new MemoryStream(_ContentLazy.Value)))
+                        {
+                            Debug.WriteLine("http.response.content:\n{0}", (object)reader.ReadToEnd());                            
+                        }
+                    }
+                    return _ContentLazy.Value;
+                }
+            }
+
+
+
+            public WebHeaderCollection Headers
+            {
+                get
+                {
+                    if (!_headersLazy.IsValueCreated)
+                    {
+                        Debug.WriteLine("http.response.headers:");
+                        foreach (var key in _headersLazy.Value.AllKeys)
+                        {
+                            Debug.WriteLine("{0} : {1}", key, _headersLazy.Value[key]);
+                        }
+                        
+                    }
+                    return _headersLazy.Value;
+                }
+            }
+
+            public XPathDocument XmlContent { get { return _xmlContentLazy.Value; } }
 
             private HttpWebResponse InvokeHttpRequest(HttpWebRequest request)
             {
@@ -96,7 +142,7 @@ namespace FunckyHttp.Common
                 }
                 catch (WebException ex)
                 {
-                    if (ex.Response as HttpWebResponse == null) { throw; }
+                    if (ex.Response as HttpWebResponse == null){ throw; }
                     return ex.Response as HttpWebResponse;
                 }
             }
@@ -110,12 +156,41 @@ namespace FunckyHttp.Common
                 Headers = new Dictionary<string, string>();
             }
 
-            public string Url { get; private set; }
+            private string _url;
+            public string Url
+            {
+                get { return _url; }
+                private set
+                {
+                    _url = value;
+                    Debug.WriteLine("http.request.url:\n{0}", (object)_url);
+                }
+            }
 
-            public IDictionary<string, string> Headers { get; set; }
-            public byte[] Content { get; set; }
+            public IDictionary<string, string> Headers { get; private set; }
 
-            public string Verb { get; set; }
+
+            private byte[] _content;
+            public byte[] Content {
+                get { return _content; }
+                set
+                {
+                    _content = value; 
+                    Debug.WriteLine("http.request.content:");
+                    Debug.WriteLine(_content.BytesToString());
+                }}
+
+            private string _verb;
+
+            public string Verb
+            {
+                get { return _verb; }
+                set
+                {
+                    _verb = value;
+                    Debug.WriteLine("http.request.verb: {0}", (object)_verb);
+                }
+            }
 
             public HttpWebRequest BuildWebRequest()
             {
@@ -181,8 +256,5 @@ namespace FunckyHttp.Common
                 }
             }
         }
-        
-
-        
     }
 }

@@ -57,8 +57,8 @@ Scenario: JSON post to SOAP service
 	| Content-Type | text/xml; charset=utf-8                                                                    |
 	| SOAPAction   | http://schemas.datacontract.org/2004/07/FunckyApp.Services/CompilerServices/GetScriptStats |
 
-	#use xslt tot transform response from previous request into a SOAP request to CompilerServices
-	And XslTransformation is FILE(XSLT\ScriptToSOAPGetScriptStatsRequest.xslt)
+	#use xslt to transform response from previous request into a SOAP request to CompilerServices
+	And xslt is FILE(XSLT\ScriptToSOAPGetScriptStatsRequest.xslt)
 	When response is transformed into request content
 	And I submit a post request
 

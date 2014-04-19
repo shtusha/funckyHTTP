@@ -32,13 +32,15 @@ namespace FunckyHttp.StepDefinitions
         }
 
 
-        [Given(@"XslTransformation is (.*)")]
+        [Given(@"xslt is (.*)")]
         public void GivenXslTransformationIs(XslCompiledTransform xslt)
         {
+
             ScenarioContextStore.XSLTransform = xslt;
+
         }
 
-        [Given(@"XslTransformation is")]
+        [Given(@"xslt is")]
         public void GivenXslTransformationIsMultiline(string xslt)
         {
             var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
@@ -80,7 +82,7 @@ namespace FunckyHttp.StepDefinitions
         [When(@"the following query is run against response: (.*)")]
         public void WhenTheFollowingQueryIsRunAgainstResponse(Wrapped<string> qry)
         {
-            ExecuteXpathQuery(ScenarioContextStore.HttpCallContext.Response.XMLContent, qry);
+            ExecuteXpathQuery(ScenarioContextStore.HttpCallContext.Response.XmlContent, qry, "Response Content");
         }
 
         [When(@"the following query is run against response:")] // multiline
@@ -93,13 +95,14 @@ namespace FunckyHttp.StepDefinitions
         [When(@"the following query is run against request: (.*)")]
         public void WhenTheFollowingQueryIsRunAgainstRequest(Wrapped<string> qry)
         {
-            ExecuteXpathQuery(ScenarioContextStore.HttpCallContext.Response.XMLContent, qry);
+            ExecuteXpathQuery(ScenarioContextStore.HttpCallContext.Response.XmlContent, qry, "Request Content");
         }
 
         [When(@"the following query is run against request:")] // multiline
         public void WhenTheFollowingQueryIsRunAgainstRequestMultiline(string qry)
         {
             WhenTheFollowingQueryIsRunAgainstRequest(qry);
+            Debug.WriteLine(string.Format("xpath.query.result {0}", ScenarioContextStore.QueryResult));
         }
 
         [When(@"query description is '(.*)'")]
@@ -165,8 +168,11 @@ namespace FunckyHttp.StepDefinitions
         }
 
 
-        private void ExecuteXpathQuery(XPathDocument target, string qry)
+        private void ExecuteXpathQuery(XPathDocument target, string qry, string queryInputDescription)
         {
+            Debug.WriteLine("xpath.query: {0}", (object)qry);
+            Debug.WriteLine("xpath.query.input: HTTPRequest");
+                
             ScenarioContextStore.Query = XPathExpression.Compile(qry);
             if (ScenarioContextStore.NamespaceManager != null)
             {
@@ -174,6 +180,8 @@ namespace FunckyHttp.StepDefinitions
             }
             ScenarioContextStore.QueryDescription = null;
             ScenarioContextStore.QueryResult = target.CreateNavigator().Evaluate(ScenarioContextStore.Query);
+
+            Debug.WriteLine("xpath.query.result: {0}", ScenarioContextStore.QueryResult);
         }
 
 
