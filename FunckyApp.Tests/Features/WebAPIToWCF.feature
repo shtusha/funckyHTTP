@@ -45,8 +45,8 @@ Scenario: JSON post to SOAP service
 	And the following assertions against response should pass:
 	| name            | expected               | query                        |
 	| Id Exists       | 1                      | 'count(//a:Id)'              |
-	| Name matches    | 'Foo'                  | 'string(//a:Name/text())'    |
-	| Program matches | 'var foo = 3 + 3 + 4;' | 'string(//a:Program/text())' |
+	| Name matches    | 'Foo'                  | '//a:Name/text()'    |
+	| Program matches | 'var foo = 3 + 3 + 4;' | '//a:Program/text()' |
 	
 	
 	#ready to build the SOAP call
@@ -64,12 +64,12 @@ Scenario: JSON post to SOAP service
 
 	Then response Status Code should be 200
 	And the following assertions against response should pass:
-	| name               | expected | query                                                                         |
-	| valid script       | true     | 'boolean(//a:IsValid)'                                                        |
-	| no invalid tokens  | 0        | 'count(//a:InvalidTokens/child::node())'                                      |
-	| has identifier foo | true     | 'count(//a:IdentifierStats[a:Name='foo'])>0'                                  |
-	| 1 identifier foo   | 1        | 'number(//a:IdentifierStats[a:Name='foo']/a:Count)'                           |
-	| has literal(s) 3   | true     | 'count(//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value='3'])>0'        |
-	| 2 literals 3       | 2        | 'number(//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value='3']/a:Count)' |
-	| has literal(s) 4   | true     | 'count(//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value='4'])>0'        |
-	| 1 literal 4        | 1        | 'number(//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value='4']/a:Count)' |
+	| name               | expected | query                                                                  |
+	| valid script       | true     | '//a:IsValid'                                                          |
+	| no invalid tokens  | 0        | 'count(//a:InvalidTokens/child::node())'                               |
+	| has identifier foo | true     | 'count(//a:IdentifierStats[a:Name='foo'])>0'                           |
+	| 1 identifier foo   | 1        | '//a:IdentifierStats[a:Name='foo']/a:Count'                            |
+	| has literal(s) 3   | true     | 'count(//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value='3'])>0' |
+	| 2 literals 3       | 2        | '//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value='3']/a:Count'  |
+	| has literal(s) 4   | true     | 'count(//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value='4'])>0' |
+	| 1 literal 4        | 1        | '//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value='4']/a:Count'  |
