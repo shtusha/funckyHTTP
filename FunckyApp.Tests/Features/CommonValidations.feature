@@ -30,12 +30,12 @@ Scenario Outline: CommonValidations
 
 	Then response Status Code should be 200
 	And the following assertions against response should pass:
-	| name              | expected             | query                                                                         |
-	| valid script      | <isValid>            | 'boolean(//a:IsValid)'                                                        |
-	| no invalid tokens | <invalidTokensCount> | 'count(//a:InvalidTokens/child::node())'                                      |
-	| # of identifiers  | <identifierCount>    | 'count(//a:IdentifierStats)'                                                  |
-	| # of literals     | <literalCount>       | 'count(//a:NumericLiteralStatistics[1]/a:LiteralStats)'                       |
-	| # of literals '3' | <3Count>             | 'number(//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value='3']/a:Count)' |
+	| expected             | query                                                                         |
+	| <isValid>            | '//a:IsValid'                                                        |
+	| <invalidTokensCount> | 'count(//a:InvalidTokens/child::node())'                                      |
+	| <identifierCount>    | 'count(//a:IdentifierStats)'                                                  |
+	| <literalCount>       | 'count(//a:NumericLiteralStatistics[1]/a:LiteralStats)'                       |
+	| <3Count>             | '//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value='3']/a:Count' |
 
 	Scenarios: 
 	| name  | content                  | isValid | invalidTokensCount | identifierCount | literalCount | 3Count |

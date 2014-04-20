@@ -154,11 +154,11 @@ this.ScenarioSetup(scenarioInfo);
             table4.AddRow(new string[] {
                         "Name matches",
                         "\'Foo\'",
-                        "\'string(//a:Name/text())\'"});
+                        "\'//a:Name/text()\'"});
             table4.AddRow(new string[] {
                         "Program matches",
                         "\'var foo = 3 + 3 + 4;\'",
-                        "\'string(//a:Program/text())\'"});
+                        "\'//a:Program/text()\'"});
 #line 45
  testRunner.And("the following assertions against response should pass:", ((string)(null)), table4, "And ");
 #line 53
@@ -195,7 +195,7 @@ this.ScenarioSetup(scenarioInfo);
             table6.AddRow(new string[] {
                         "valid script",
                         "true",
-                        "\'boolean(//a:IsValid)\'"});
+                        "\'//a:IsValid\'"});
             table6.AddRow(new string[] {
                         "no invalid tokens",
                         "0",
@@ -207,7 +207,7 @@ this.ScenarioSetup(scenarioInfo);
             table6.AddRow(new string[] {
                         "1 identifier foo",
                         "1",
-                        "\'number(//a:IdentifierStats[a:Name=\'foo\']/a:Count)\'"});
+                        "\'//a:IdentifierStats[a:Name=\'foo\']/a:Count\'"});
             table6.AddRow(new string[] {
                         "has literal(s) 3",
                         "true",
@@ -215,7 +215,7 @@ this.ScenarioSetup(scenarioInfo);
             table6.AddRow(new string[] {
                         "2 literals 3",
                         "2",
-                        "\'number(//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value=\'3\']/a:Count)\'"});
+                        "\'//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value=\'3\']/a:Count\'"});
             table6.AddRow(new string[] {
                         "has literal(s) 4",
                         "true",
@@ -223,7 +223,7 @@ this.ScenarioSetup(scenarioInfo);
             table6.AddRow(new string[] {
                         "1 literal 4",
                         "1",
-                        "\'number(//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value=\'4\']/a:Count)\'"});
+                        "\'//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value=\'4\']/a:Count\'"});
 #line 66
  testRunner.And("the following assertions against response should pass:", ((string)(null)), table6, "And ");
 #line hidden

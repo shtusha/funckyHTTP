@@ -128,29 +128,23 @@ this.ScenarioSetup(scenarioInfo);
  testRunner.Then("response Status Code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
                         "expected",
                         "query"});
             table3.AddRow(new string[] {
-                        "valid script",
                         string.Format("{0}", isValid),
-                        "\'boolean(//a:IsValid)\'"});
+                        "\'//a:IsValid\'"});
             table3.AddRow(new string[] {
-                        "no invalid tokens",
                         string.Format("{0}", invalidTokensCount),
                         "\'count(//a:InvalidTokens/child::node())\'"});
             table3.AddRow(new string[] {
-                        "# of identifiers",
                         string.Format("{0}", identifierCount),
                         "\'count(//a:IdentifierStats)\'"});
             table3.AddRow(new string[] {
-                        "# of literals",
                         string.Format("{0}", literalCount),
                         "\'count(//a:NumericLiteralStatistics[1]/a:LiteralStats)\'"});
             table3.AddRow(new string[] {
-                        "# of literals \'3\'",
                         string.Format("{0}", _3Count),
-                        "\'number(//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value=\'3\']/a:Count)\'"});
+                        "\'//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value=\'3\']/a:Count\'"});
 #line 32
  testRunner.And("the following assertions against response should pass:", ((string)(null)), table3, "And ");
 #line hidden

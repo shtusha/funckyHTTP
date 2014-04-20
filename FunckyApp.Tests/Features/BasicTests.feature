@@ -58,7 +58,7 @@ Scenario: Insert script
 	And the following assertions against response should pass:
 	| name            | expected         | query                     |
 	| Id Exists       | 1                | 'count(Script/Id)'        |
-	| Name matches    | 'Test'           | 'string(//Name/text())'   |
+	| Name matches    | 'Test'           | '//Name/text()'   |
 	| Program matches | 'var a = 1 + 2;' | FILE(Queries\program.txt) |
 	
 	#repeats last test from table above
@@ -79,9 +79,9 @@ Scenario: Put/Delete script
 	Then response Status Code should be 200
 	And the following assertions against response should pass:
 	| name            | expected       | query                     |
-	| Id matches      | '1234567890'   | 'string(//Id/text())'   |
-	| Name matches    | 'Test'         | 'string(//Name/text())' |
-	| Program matches | 'var a = 2+3;' | FILE(Queries\program.txt)   |
+	| Id matches      | '1234567890'   | '//Id/text()'             |
+	| Name matches    | 'Test'         | '//Name/text()'           |
+	| Program matches | 'var a = 2+3;' | FILE(Queries\program.txt) |
 
 #Delete the document
 	Given url is 'scripts/1234567890'

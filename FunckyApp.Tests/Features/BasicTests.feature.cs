@@ -204,7 +204,7 @@ this.FeatureBackground();
             table5.AddRow(new string[] {
                         "Name matches",
                         "\'Test\'",
-                        "\'string(//Name/text())\'"});
+                        "\'//Name/text()\'"});
             table5.AddRow(new string[] {
                         "Program matches",
                         "\'var a = 1 + 2;\'",
@@ -251,11 +251,11 @@ this.FeatureBackground();
             table6.AddRow(new string[] {
                         "Id matches",
                         "\'1234567890\'",
-                        "\'string(//Id/text())\'"});
+                        "\'//Id/text()\'"});
             table6.AddRow(new string[] {
                         "Name matches",
                         "\'Test\'",
-                        "\'string(//Name/text())\'"});
+                        "\'//Name/text()\'"});
             table6.AddRow(new string[] {
                         "Program matches",
                         "\'var a = 2+3;\'",

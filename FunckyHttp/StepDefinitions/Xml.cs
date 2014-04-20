@@ -114,14 +114,15 @@ namespace FunckyHttp.StepDefinitions
         [Then(@"the result should be (true|false)")]
         public void ThenTheResultShouldBe(bool expected)
         {
-            if (ScenarioContextStore.QueryResult is bool)
+            bool actual;
+            if (bool.TryParse(ScenarioContextStore.QueryResult.ToString(), out actual))
             {
-                bool actual = (bool)ScenarioContextStore.QueryResult;
                 Assert.AreEqual(expected, actual, GetQueryDescription());
             }
-
             else
-                Assert.Fail("Query result type and expected value type missmatch.");
+            {
+                Assert.Fail("result to expected type mismatch.\n{0}", GetQueryDescription());
+            }
         }
 
         [Then(@"the result should be ([-]?[0-9]*\.?[0-9]+)")]
@@ -131,7 +132,7 @@ namespace FunckyHttp.StepDefinitions
             if (decimal.TryParse(ScenarioContextStore.QueryResult.ToString(), out actual))
                 Assert.AreEqual(expected, actual, GetQueryDescription());
             else
-                Assert.Fail("Query result type and expected value type missmatch.");
+                Assert.Fail("result to expected type mismatch.\n{0}", GetQueryDescription());
         }
 
         [Then(@"the result should be '(.*)'")]
@@ -141,7 +142,7 @@ namespace FunckyHttp.StepDefinitions
             if (actual != null)
                 Assert.AreEqual(expected, actual, GetQueryDescription());
             else
-                Assert.Fail("Query result type and expected value type missmatch.");
+                Assert.Fail("result to expected type mismatch.\n{0}", GetQueryDescription());
         }
 
 
@@ -171,7 +172,7 @@ namespace FunckyHttp.StepDefinitions
         private void ExecuteXpathQuery(XPathDocument target, string qry, string queryInputDescription)
         {
             Debug.WriteLine("xpath.query: {0}", (object)qry);
-            Debug.WriteLine("xpath.query.input: HTTPRequest");
+            Debug.WriteLine("xpath.query.input: {0}", (object)queryInputDescription);
                 
             ScenarioContextStore.Query = XPathExpression.Compile(qry);
             if (ScenarioContextStore.NamespaceManager != null)
@@ -179,7 +180,19 @@ namespace FunckyHttp.StepDefinitions
                 ScenarioContextStore.Query.SetContext(ScenarioContextStore.NamespaceManager);
             }
             ScenarioContextStore.QueryDescription = null;
-            ScenarioContextStore.QueryResult = target.CreateNavigator().Evaluate(ScenarioContextStore.Query);
+            
+            var result = target.CreateNavigator().Evaluate(ScenarioContextStore.Query);
+
+            var nodeiterator = result as XPathNodeIterator;
+            if (nodeiterator != null && nodeiterator.Count == 1)
+            {
+                nodeiterator.MoveNext();
+                ScenarioContextStore.QueryResult = nodeiterator.Current.Value;
+            }
+            else
+            {
+                ScenarioContextStore.QueryResult = result;
+            }
 
             Debug.WriteLine("xpath.query.result: {0}", ScenarioContextStore.QueryResult);
         }
@@ -187,12 +200,18 @@ namespace FunckyHttp.StepDefinitions
 
         private void RunAssertions(Table table, string target)
         {
+
             foreach (var row in table.Rows)
             {
                 if (row["expected"].Equals("N/A", StringComparison.CurrentCultureIgnoreCase)) { continue; }
 
                 When(string.Format("the following query is run against {0}: {1}", target, row["query"]));
-                When(string.Format("query description is '{0}'", row["name"]));
+                
+                if (table.ContainsColumn("name"))
+                {
+                    When(string.Format("query description is '{0}'", row["name"]));
+                }
+
                 Then(string.Format("the result should be {0}", row["expected"]));
             }
 

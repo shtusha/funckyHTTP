@@ -21,11 +21,11 @@ Scenario: Insert script (JSON)
 	And the following assertions against response should pass:
 	| name            | expected         | query                         |
 	| Id Exists       | 1                | 'count(//Id)'                 |
-	| Name matches    | 'Test'           | 'string(/Script/Name/text())' |
-	| Program matches | 'var a = 3 + 4;' | 'string(//Program/text())'    |
+	| Name matches    | 'Test'           | '/Script/Name/text()' |
+	| Program matches | 'var a = 3 + 4;' | '//Program/text()'    |
 	
 	#repeats last test from table above
-	When the following query is run against response: 'string(//Program/text())'
+	When the following query is run against response: '//Program/text()'
 	Then query result should match 'var a = \d \+ \d;'
 
 Scenario: Put/Delete script (JSON)
@@ -42,9 +42,9 @@ Scenario: Put/Delete script (JSON)
 	Then response Status Code should be 200
 	And the following assertions against response should pass:
 	| name            | expected         | query                      |
-	| Id matches      | '3plus4'         | 'string(//Id/text())'      |
-	| Name matches    | 'Test'           | 'string(//Name/text())'    |
-	| Program matches | 'var a = 3 + 4;' | 'string(//Program/text())' |
+	| Id matches      | '3plus4'         | '//Id/text()'      |
+	| Name matches    | 'Test'           | '//Name/text()'    |
+	| Program matches | 'var a = 3 + 4;' | '//Program/text()' |
 
 #Delete the document
 	Given url is 'scripts/3plus4'
