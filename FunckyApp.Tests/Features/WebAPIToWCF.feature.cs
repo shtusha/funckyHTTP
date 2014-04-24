@@ -73,7 +73,7 @@ namespace FunckyApp.Tests.Features
         {
 #line 5
  #line 6
- testRunner.Given("base url is \'http://localhost:37580/\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("base url is CONFIG[baseUrlOverride]", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "alias",
@@ -94,11 +94,11 @@ namespace FunckyApp.Tests.Features
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("JSON post to SOAP service", new string[] {
                         "xml.namespaces.keep"});
-#line 14
+#line 13
 this.ScenarioSetup(scenarioInfo);
 #line 5
  this.FeatureBackground();
-#line 17
+#line 16
  testRunner.Given("url is \'api/scripts/\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
@@ -110,21 +110,21 @@ this.ScenarioSetup(scenarioInfo);
             table2.AddRow(new string[] {
                         "Content-Type",
                         "application/json"});
-#line 18
+#line 17
  testRunner.And("request headers are", ((string)(null)), table2, "And ");
 #line hidden
-#line 22
+#line 21
  testRunner.And("request content is", "{\r\n\t\"Name\" : \"Foo\",\r\n\t\"Program\": \"var foo = 3 + 3 + 4;\"\r\n}", ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 30
+#line 29
  testRunner.When("I submit a post request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 31
+#line 30
  testRunner.Then("response Status Code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 34
+#line 33
  testRunner.When("the following query is run against response: \'concat(\"api/scripts/\", //Id/text())" +
                     "\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 35
+#line 34
  testRunner.Then("all is cool", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 37
+#line 36
  testRunner.Given("url is query result", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
@@ -136,11 +136,11 @@ this.ScenarioSetup(scenarioInfo);
             table3.AddRow(new string[] {
                         "Content-Type",
                         "application/xml"});
-#line 38
+#line 37
  testRunner.And("request headers are", ((string)(null)), table3, "And ");
-#line 42
+#line 41
  testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 44
+#line 43
  testRunner.Then("response Status Code should be OK", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
@@ -159,9 +159,9 @@ this.ScenarioSetup(scenarioInfo);
                         "Program matches",
                         "\'var foo = 3 + 3 + 4;\'",
                         "\'//a:Program/text()\'"});
-#line 45
+#line 44
  testRunner.And("the following assertions against response should pass:", ((string)(null)), table4, "And ");
-#line 53
+#line 51
  testRunner.Given("url is \'Services/ScriptCompilerService.svc\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
@@ -177,15 +177,15 @@ this.ScenarioSetup(scenarioInfo);
                         "SOAPAction",
                         "http://schemas.datacontract.org/2004/07/FunckyApp.Services/CompilerServices/GetSc" +
                             "riptStats"});
-#line 54
+#line 52
  testRunner.And("request headers are", ((string)(null)), table5, "And ");
-#line 61
+#line 59
  testRunner.And("xslt is FILE(XSLT\\ScriptToSOAPGetScriptStatsRequest.xslt)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 62
+#line 60
  testRunner.When("response is transformed into request content", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 63
+#line 61
  testRunner.And("I submit a post request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 65
+#line 63
  testRunner.Then("response Status Code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
@@ -224,7 +224,7 @@ this.ScenarioSetup(scenarioInfo);
                         "1 literal 4",
                         "1",
                         "\'//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value=\'4\']/a:Count\'"});
-#line 66
+#line 64
  testRunner.And("the following assertions against response should pass:", ((string)(null)), table6, "And ");
 #line hidden
             this.ScenarioCleanup();

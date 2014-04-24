@@ -3,11 +3,10 @@
 	to various types of http endpoints.
 
 	Background: 
-	Given base url is 'http://localhost:37580/'
+	Given base url is CONFIG[baseUrlOverride]
 	And xml namespace aliases are
 	| alias | namespace                                                |
 	| a     | http://schemas.datacontract.org/2004/07/FunckyApp.Models |
-
 
 @xml.namespaces.keep
 
@@ -43,11 +42,10 @@ Scenario: JSON post to SOAP service
 
 	Then response Status Code should be OK
 	And the following assertions against response should pass:
-	| name            | expected               | query                        |
-	| Id Exists       | 1                      | 'count(//a:Id)'              |
+	| name            | expected               | query                |
+	| Id Exists       | 1                      | 'count(//a:Id)'      |
 	| Name matches    | 'Foo'                  | '//a:Name/text()'    |
 	| Program matches | 'var foo = 3 + 3 + 4;' | '//a:Program/text()' |
-	
 	
 	#ready to build the SOAP call
 	Given url is 'Services/ScriptCompilerService.svc'

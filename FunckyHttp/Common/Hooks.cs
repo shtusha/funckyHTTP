@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Xml;
 using TechTalk.SpecFlow;
 using System.Text;
@@ -38,6 +39,7 @@ namespace FunckyHttp.Common
         [BeforeScenario("xml.namespaces.keep")]
         public static void KeepXmlNamespaces()
         {
+            Debug.WriteLine("xml.namespaces.drop: false");
             ScenarioContextStore.DropXmlNamespaces = false;
         }
 
@@ -45,6 +47,7 @@ namespace FunckyHttp.Common
         public static void DropXmlNamespaces()
         {
             ScenarioContextStore.DropXmlNamespaces = true;
+            Debug.WriteLine("xml.namespaces.drop: true");
         }
     }
 }
