@@ -24,11 +24,12 @@ namespace FunckyHttp.Common
             return value;
         }
 
-        [StepArgumentTransformation(@"query result")]
-        public Wrapped<string> StringFromLiteral()
+        [StepArgumentTransformation(@"CONFIG\[(.*)\]")]
+        public Wrapped<string> StringFromConfig(string key)
         {
-            return new Wrapped<string>(ScenarioContextStore.QueryResult.ToString());
+            return new Wrapped<string>(ConfigurationManager.AppSettings[key]);
         }
+
 
 
         [StepArgumentTransformation(@"FILE\((.*)\)")]
@@ -59,12 +60,7 @@ namespace FunckyHttp.Common
         public Wrapped<string> StringFromQueryResult()
         {
             if (ScenarioContextStore.QueryResult == null) { return null; }
-            var iterator = ScenarioContextStore.QueryResult as XPathNodeIterator;
-            if (iterator == null)
-            {
-                return ScenarioContextStore.QueryResult.ToString();
-            }
-            return iterator.Current.OuterXml;
+            return ScenarioContextStore.QueryResult.ToString();
         }
 
         [StepArgumentTransformation(@"query result")]

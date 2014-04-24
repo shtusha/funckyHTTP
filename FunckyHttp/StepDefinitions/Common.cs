@@ -15,7 +15,7 @@ namespace FunckyHttp.StepDefinitions
     {
 
         [Given(@"all is cool"), When(@"all is cool"),Then(@"all is cool")]
-        public static void ThenAllIsCool()
+        public static void AllIsCool()
         {
             Debug.WriteLine("All is cool");
         }
