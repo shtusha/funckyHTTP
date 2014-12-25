@@ -3,7 +3,7 @@
 	to various types of http endpoints.
 
 	Background: 
-	Given base url is CONFIG[baseUrlOverride]
+	Given base url is CONFIG(baseUrlOverride)
 	And xml namespace aliases are
 	| alias | namespace                                                |
 	| a     | http://schemas.datacontract.org/2004/07/FunckyApp.Models |

@@ -24,7 +24,7 @@ namespace FunckyHttp.Common
             return value;
         }
 
-        [StepArgumentTransformation(@"CONFIG\[(.*)\]")]
+        [StepArgumentTransformation(@"CONFIG\((.*)\)")]
         public Wrapped<string> StringFromConfig(string key)
         {
             return new Wrapped<string>(ConfigurationManager.AppSettings[key]);
@@ -42,6 +42,12 @@ namespace FunckyHttp.Common
                 return File.ReadAllText(filePath);
             }
             throw new ArgumentException(string.Format("file not found: {0}", filePath ?? "<null>"));
+        }
+
+        [StepArgumentTransformation(@"response header (.*)")]
+        public Wrapped<string> StringFromHeader(string headerName)
+        {
+            return ScenarioContextStore.HttpCallContext.Response.Headers[headerName];
         }
 
         [StepArgumentTransformation(@"FILE\((.*)\)")]
