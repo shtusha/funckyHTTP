@@ -4,10 +4,9 @@
 
 Background:
 	Given request headers are
-	| name         | value            |
-	| Accept       | application/json |
-	| Content-Type | application/json |
-
+	| name         | value              |
+	| Accept       | 'application/json' |
+	| Content-Type | 'application/json' |
 
 @rootElementName @Script
 Scenario: Insert script (JSON)
@@ -19,8 +18,8 @@ Scenario: Insert script (JSON)
 	
 	Then response Status Code should be 200
 	And the following assertions against response should pass:
-	| name            | expected         | query                         |
-	| Id Exists       | 1                | 'count(//Id)'                 |
+	| name            | expected         | query                 |
+	| Id Exists       | 1                | 'count(//Id)'         |
 	| Name matches    | 'Test'           | '/Script/Name/text()' |
 	| Program matches | 'var a = 3 + 4;' | '//Program/text()'    |
 	

@@ -4,9 +4,9 @@
 
 Background:
 	Given request headers are
-	| name         | value           |
-	| Accept       | application/xml |
-	| Content-Type | text/xml        |
+	| name         | value             |
+	| Accept       | 'application/xml' |
+	| Content-Type | 'text/xml'        |
 		
 Scenario: Edge cases
 
@@ -23,9 +23,7 @@ Scenario: Edge cases
 #Send empty post
 	Given url is 'scripts/'
 	When I submit a post request
-	And add headers
-	| name           | value |
-	| Content-Length | 0     |
+	And I add a request header Content-Length : '0'
 	Then response Status Code should be 400
 	
 Scenario: Accept header handling
@@ -33,16 +31,16 @@ Scenario: Accept header handling
 #When accept header is xml response should be xml
 	Given url is 'scripts/'
 	And request headers are
-	| name   | value           |
-	| Accept | application/xml |
+	| name   | value             |
+	| Accept | 'application/xml' |
 	When I submit a get request
 	Then response header Content-Type should match 'application/xml'
 
 #When accept header is json response should be json	
 	Given url is 'scripts/'
 	And request headers are
-	| name   | value            |
-	| Accept | application/json |
+	| name   | value              |
+	| Accept | 'application/json' |
 	When I submit a get request
 	Then response header Content-Type should be 'application/json; charset=utf-8'
 	Then response header Content-Type should match '^application/json; charset=utf-8$'

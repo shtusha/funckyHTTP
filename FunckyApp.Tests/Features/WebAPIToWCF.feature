@@ -15,9 +15,9 @@ Scenario: JSON post to SOAP service
 	#first post new script
 	Given url is 'api/scripts/'
 	And request headers are
-	| name         | value            |
-	| Accept       | application/json |
-	| Content-Type | application/json |
+	| name         | value              |
+	| Accept       | 'application/json' |
+	| Content-Type | 'application/json' |
 	And request content is 
 	"""
 	{
@@ -35,9 +35,10 @@ Scenario: JSON post to SOAP service
 
 	Given url is query result
 	And request headers are
-	| name         | value           |
-	| Accept       | application/xml |
-	| Content-Type | application/xml |
+	| name         | value             |
+	| Accept       | 'application/xml' |
+	| Content-Type | 'application/xml' |
+	| Foo          | query result      |
 	When I submit a get request
 
 	Then response Status Code should be OK
@@ -50,10 +51,10 @@ Scenario: JSON post to SOAP service
 	#ready to build the SOAP call
 	Given url is 'Services/ScriptCompilerService.svc'
 	And request headers are
-	| name         | value                                                                                      |
-	| Accept       | application/xml                                                                            |
-	| Content-Type | text/xml; charset=utf-8                                                                    |
-	| SOAPAction   | http://schemas.datacontract.org/2004/07/FunckyApp.Services/CompilerServices/GetScriptStats |
+	| name         | value                                                                                        |
+	| Accept       | 'application/xml'                                                                            |
+	| Content-Type | 'text/xml; charset=utf-8'                                                                    |
+	| SOAPAction   | 'http://schemas.datacontract.org/2004/07/FunckyApp.Services/CompilerServices/GetScriptStats' |
 
 	#use xslt to transform response from previous request into a SOAP request to CompilerServices
 	And xslt is FILE(XSLT\ScriptToSOAPGetScriptStatsRequest.xslt)

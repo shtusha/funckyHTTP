@@ -86,31 +86,58 @@ namespace FunckyHttp.StepDefinitions
             ScenarioContextStore.RequestHeaders.Clear();
             foreach (var row in table.Rows)
             {
-                ScenarioContextStore.RequestHeaders[row["name"]] = row["value"];
+                Given(string.Format("add a GLOBAL request header {0} : {1}", row["name"], row["value"]));
             }
 
             if(ScenarioContextStore.HttpCallContext != null)
             {
                 ScenarioContextStore.HttpCallContext.Request.Headers.Clear();
-                foreach (var row in table.Rows)
-                {
-                    ScenarioContextStore.HttpCallContext.Request.Headers[row["name"]] = row["value"];
-                }
+                GivenAddHeaders(table);
             }
             Debug.WriteLine("http.request.headers:");
             ScenarioContextStore.RequestHeaders.ToList().ForEach(a=>Debug.WriteLine("{0} : {1}", a.Key, a.Value));
 
         }
 
-        [When(@"*add headers")]
+        
+        [When(@"*add reqauest headers")]
         public void WhenAddHeaders(Table table)
         {
             foreach (var row in table.Rows)
             {
-                ScenarioContextStore.HttpCallContext.Request.Headers[row["name"]] = row["value"];
+                Given(string.Format("add a request header {0} : {1}", row["name"], row["value"]));
             }
             Debug.WriteLine("http.request.headers:");
             ScenarioContextStore.HttpCallContext.Request.Headers.ToList().ForEach(a => Debug.WriteLine("{0} : {1}", a.Key, a.Value));
+        }
+
+        [Given(@"*add request headers")]
+        public void GivenAddHeaders(Table table)
+        {
+            foreach (var row in table.Rows)
+            {
+                Given(string.Format("add a request header {0} : {1}", row["name"], row["value"]));
+            }
+            Debug.WriteLine("http.request.headers:");
+            ScenarioContextStore.HttpCallContext.Request.Headers.ToList().ForEach(a => Debug.WriteLine("{0} : {1}", a.Key, a.Value));
+        }
+
+        [When(@"*add a request header (.*) : (.*)")]
+        public void WhenAddHeader(string name, Wrapped<string> value)
+        {
+            ScenarioContextStore.HttpCallContext.Request.Headers[name] = value;
+        }
+
+        [Given(@"*add a request header (.*) : (.*)")]
+        public void GivenAddHeader(string name, Wrapped<string> value)
+        {
+            ScenarioContextStore.HttpCallContext.Request.Headers[name] = value;
+        }
+
+        [Given(@"*add a GLOBAL request header (.*) : (.*)")]
+        public void GivenGlobalAddHeader(string name, Wrapped<string> value)
+        {
+            ScenarioContextStore.RequestHeaders[name] = value;
         }
 
         [Given(@"request content is (.*)")]

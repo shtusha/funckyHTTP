@@ -18,10 +18,10 @@ Scenario Outline: CommonValidations
 	
 
 	And request headers are
-	| name         | value                                                                                      |
-	| Accept       | application/xml                                                                            |
-	| Content-Type | text/xml; charset=utf-8                                                                    |
-	| SOAPAction   | http://schemas.datacontract.org/2004/07/FunckyApp.Services/CompilerServices/GetScriptStats |
+	| name         | value                                                                                        |
+	| Accept       | 'application/xml'                                                                            |
+	| Content-Type | 'text/xml; charset=utf-8'                                                                    |
+	| SOAPAction   | 'http://schemas.datacontract.org/2004/07/FunckyApp.Services/CompilerServices/GetScriptStats' |
 
 	#use xslt to transform request content into a SOAP request to CompilerServices
 	And xslt is FILE(XSLT\ScriptToSOAPGetScriptStatsRequest.xslt)
