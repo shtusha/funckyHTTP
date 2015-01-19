@@ -38,7 +38,6 @@ Scenario: JSON post to SOAP service
 	| name         | value             |
 	| Accept       | 'application/xml' |
 	| Content-Type | 'application/xml' |
-	| Foo          | query result      |
 	When I submit a get request
 
 	Then response Status Code should be OK

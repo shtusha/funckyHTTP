@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using System.Security.Cryptography;
 using System.Xml.XPath;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TechTalk.SpecFlow;
@@ -60,6 +62,12 @@ namespace FunckyHttp.Common
                 return File.ReadAllBytes(filePath);
             }
             throw new ArgumentException(string.Format("file not found: {0}", filePath ?? "<null>"));
+        }
+
+        [StepArgumentTransformation("'(.*)'")]
+        public byte[] BytesFromstringLiteral(string value)
+        {
+            return value == null ? null : Encoding.Default.GetBytes(value);
         }
 
         [StepArgumentTransformation(@"query result")]
