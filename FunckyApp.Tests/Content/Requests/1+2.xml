@@ -1,4 +1,0 @@
-﻿<Script xmlns="http://schemas.datacontract.org/2004/07/FunckyApp.Models">
-  <Name>Test</Name>
-  <Program>var a = 1 + 2;</Program>
-</Script>

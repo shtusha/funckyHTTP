@@ -1,0 +1,19 @@
+﻿<!-- ko with: postDetails -->
+<div class="jumbotron" data-bind="with: message">
+    @Html.Partial("_MessageTemplate")
+</div>
+<br/>
+<h3>
+    Replies:&nbsp;&nbsp;&nbsp;
+    <span data-bind="if: canReply"><a href="#" data-bind="click: reply">Add <strong>two</strong></a> if you want</span>
+    <span data-bind="ifnot: canReply">you need <strong>three</strong> log in be<strong>five</strong> you can reply</span>
+</h3>
+<hr />
+<!-- ko foreach: replies -->
+<div class="well">
+    @Html.Partial("_MessageTemplate")
+</div>
+<!-- /ko -->
+<!-- /ko -->
+
+

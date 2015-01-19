@@ -98,24 +98,38 @@ this.ScenarioSetup(scenarioInfo);
 #line 5
 this.FeatureBackground();
 #line 14
- testRunner.Given("url is \'scripts/InvalidIdentifier\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("url is \'api/posts/InvalidIdentifier\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 15
  testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 16
  testRunner.Then("response Status Code should be NotFound", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 19
- testRunner.Given("url is \'scripts/\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("url is \'api/posts\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 20
  testRunner.When("I submit a delete request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 21
  testRunner.Then("response Status Code should be 405", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 24
- testRunner.Given("url is \'scripts/\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("url is \'api/posts\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 25
  testRunner.When("I submit a post request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 26
+<<<<<<< HEAD
  testRunner.And("I add a request header Content-Length : \'0\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 27
+=======
+ testRunner.And("add headers", ((string)(null)), table2, "And ");
+#line 29
+ testRunner.Then("response Status Code should be 401", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 32
+ testRunner.Given("url is \'api/posts/preview\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 33
+ testRunner.And("request content is", "<Foo><Bar/></Foo>", ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 37
+ testRunner.When("I submit a post request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 38
+>>>>>>> WIP. Added Inflationary english, Converting tests
  testRunner.Then("response Status Code should be 400", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -127,18 +141,28 @@ this.FeatureBackground();
         public virtual void AcceptHeaderHandling()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Accept header handling", ((string[])(null)));
+<<<<<<< HEAD
 #line 29
 this.ScenarioSetup(scenarioInfo);
 #line 5
 this.FeatureBackground();
 #line 32
  testRunner.Given("url is \'scripts/\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+=======
+#line 40
+this.ScenarioSetup(scenarioInfo);
+#line 5
+this.FeatureBackground();
+#line 43
+ testRunner.Given("url is \'api/posts\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+>>>>>>> WIP. Added Inflationary english, Converting tests
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table2.AddRow(new string[] {
                         "Accept",
+<<<<<<< HEAD
                         "\'application/xml\'"});
 #line 33
  testRunner.And("request headers are", ((string)(null)), table2, "And ");
@@ -148,12 +172,24 @@ this.FeatureBackground();
  testRunner.Then("response header Content-Type should match \'application/xml\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 40
  testRunner.Given("url is \'scripts/\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+=======
+                        "application/xml"});
+#line 44
+ testRunner.And("request headers are", ((string)(null)), table3, "And ");
+#line 47
+ testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 48
+ testRunner.Then("response header Content-Type should match \'application/xml\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 51
+ testRunner.Given("url is \'api/posts\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+>>>>>>> WIP. Added Inflationary english, Converting tests
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "value"});
             table3.AddRow(new string[] {
                         "Accept",
+<<<<<<< HEAD
                         "\'application/json\'"});
 #line 41
  testRunner.And("request headers are", ((string)(null)), table3, "And ");
@@ -162,7 +198,64 @@ this.FeatureBackground();
 #line 45
  testRunner.Then("response header Content-Type should be \'application/json; charset=utf-8\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 46
+=======
+                        "application/json"});
+#line 52
+ testRunner.And("request headers are", ((string)(null)), table4, "And ");
+#line 55
+ testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 56
+ testRunner.Then("response header Content-Type should be \'application/json; charset=utf-8\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 57
+>>>>>>> WIP. Added Inflationary english, Converting tests
  testRunner.Then("response header Content-Type should match \'^application/json; charset=utf-8$\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Preview")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "BasicTest")]
+        public virtual void Preview()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Preview", ((string[])(null)));
+#line 59
+this.ScenarioSetup(scenarioInfo);
+#line 5
+this.FeatureBackground();
+#line 61
+testRunner.Given("url is \'api/posts/preview\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 62
+testRunner.And("request content is", "<PostBindingModel xmlns=\"http://schemas.datacontract.org/2004/07/FunckyApp.Models" +
+                    "\">\r\n  <Message>Tenor with hungry tendencies ate a tenderloin today</Message>\r\n  " +
+                    "<InReplyTo></InReplyTo>\r\n</PostBindingModel>", ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 69
+testRunner.When("I submit a post request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 70
+testRunner.Then("response Status Code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 72
+testRunner.When("the following query is run against response: \'//InflatedText\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 73
+testRunner.Then("the result should be \'Elevenor with hungry elevendencies nine a elevenderloin thr" +
+                    "eeday\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 76
+testRunner.Given("url is \'api/posts/preview\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 77
+testRunner.And("request content is FILE(Requests\\Tenor.xml)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 79
+testRunner.When("I submit a post request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 80
+testRunner.Then("response Status Code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                        "expected",
+                        "query"});
+            table5.AddRow(new string[] {
+                        "\'Elevenor with hungry elevendencies nine a elevenderloin threeday\'",
+                        "\'//InflatedText\'"});
+#line 81
+testRunner.And("the following assertions against response should pass:", ((string)(null)), table5, "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -173,6 +266,7 @@ this.FeatureBackground();
         public virtual void InsertScript()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Insert script", ((string[])(null)));
+<<<<<<< HEAD
 #line 48
 this.ScenarioSetup(scenarioInfo);
 #line 5
@@ -207,6 +301,42 @@ this.FeatureBackground();
 #line 63
  testRunner.When("the following query is run against response: FILE(Queries\\program.txt)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 64
+=======
+#line 87
+this.ScenarioSetup(scenarioInfo);
+#line 5
+this.FeatureBackground();
+#line 89
+ testRunner.Given("url is \'scripts/\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 90
+ testRunner.And("request content is FILE(Requests\\1+2.xml)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 92
+ testRunner.When("I submit a post request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 95
+ testRunner.Then("response Status Code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "expected",
+                        "query"});
+            table6.AddRow(new string[] {
+                        "Id Exists",
+                        "1",
+                        "\'count(Script/Id)\'"});
+            table6.AddRow(new string[] {
+                        "Name matches",
+                        "\'Test\'",
+                        "\'//Name/text()\'"});
+            table6.AddRow(new string[] {
+                        "Program matches",
+                        "\'var a = 1 + 2;\'",
+                        "FILE(Queries\\program.txt)"});
+#line 96
+ testRunner.And("the following assertions against response should pass:", ((string)(null)), table6, "And ");
+#line 103
+ testRunner.When("the following query is run against response: FILE(Queries\\program.txt)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 104
+>>>>>>> WIP. Added Inflationary english, Converting tests
  testRunner.Then("query result should match \'var a = \\d \\+ \\d;\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -218,6 +348,7 @@ this.FeatureBackground();
         public virtual void PutDeleteScript()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Put/Delete script", ((string[])(null)));
+<<<<<<< HEAD
 #line 66
 this.ScenarioSetup(scenarioInfo);
 #line 5
@@ -266,6 +397,56 @@ this.FeatureBackground();
 #line 91
  testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 92
+=======
+#line 106
+this.ScenarioSetup(scenarioInfo);
+#line 5
+this.FeatureBackground();
+#line 109
+ testRunner.Given("url is \'scripts/1234567890\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 110
+ testRunner.And("request content is FILE(Requests\\2+3.xml)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 111
+ testRunner.When("I submit a put request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 112
+ testRunner.Then("response Status Code should be 204", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 115
+ testRunner.Given("url is \'scripts/1234567890\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 116
+ testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 117
+ testRunner.Then("response Status Code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                        "name",
+                        "expected",
+                        "query"});
+            table7.AddRow(new string[] {
+                        "Id matches",
+                        "\'1234567890\'",
+                        "\'//Id/text()\'"});
+            table7.AddRow(new string[] {
+                        "Name matches",
+                        "\'Test\'",
+                        "\'//Name/text()\'"});
+            table7.AddRow(new string[] {
+                        "Program matches",
+                        "\'var a = 2+3;\'",
+                        "FILE(Queries\\program.txt)"});
+#line 118
+ testRunner.And("the following assertions against response should pass:", ((string)(null)), table7, "And ");
+#line 125
+ testRunner.Given("url is \'scripts/1234567890\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 126
+ testRunner.When("I submit a delete request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 127
+ testRunner.Then("response Status Code should be 204", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 130
+ testRunner.Given("url is \'scripts/1234567890\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 131
+ testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 132
+>>>>>>> WIP. Added Inflationary english, Converting tests
  testRunner.Then("response Status Code should be 404", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

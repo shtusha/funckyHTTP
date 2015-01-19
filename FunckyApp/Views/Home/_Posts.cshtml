@@ -1,0 +1,21 @@
+﻿<!-- ko with: posts -->
+<div data-bind="if: loading">
+    <div class="jumbotron"><p class="lead">Loading posts...</p></div>
+</div>
+<div data-bind="ifnot: loading" class ="container">
+    <div class="page-header">
+        <h3>
+            Check out these posts...
+            <span data-bind="if: canAddPost">or <a href="#" data-bind="click: addPost">Add <strong>two</strong></a> if you want</span>
+            <span data-bind="ifnot: canAddPost">you need <strong>three</strong> log in be<strong>five</strong> you can add <strong>two</strong></span>
+        </h3>
+        
+    </div>
+    <!-- ko foreach: postItems -->
+    <blockquote>
+        <a href="#" data-bind="click: viewDetails"><p data-bind="text: title"></p></a>
+        <footer>by <strong data-bind="text: author"></strong> on <span data-bind="text: createdOn"></span></footer>
+    </blockquote>
+    <!-- /ko -->
+</div>
+<!-- /ko -->

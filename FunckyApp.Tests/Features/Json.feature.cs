@@ -87,13 +87,13 @@ namespace FunckyApp.Tests.Features
         }
         
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Insert script (JSON)")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Preview (JSON)")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "JSON Tests")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("rootElementName")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Script")]
-        public virtual void InsertScriptJSON()
+        public virtual void PreviewJSON()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Insert script (JSON)", new string[] {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Preview (JSON)", new string[] {
                         "rootElementName",
                         "Script"});
 #line 12

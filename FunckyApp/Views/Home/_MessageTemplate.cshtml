@@ -1,0 +1,13 @@
+﻿<p class="lead">
+<!-- ko foreach: fragments
+--><!-- ko if: isInflated
+--><strong data-bind="text: inflatedTextDisplay"></strong><!-- /ko 
+--><!-- ko ifnot: isInflated
+--><span data-bind="text: originalText"></span><!-- /ko --><!-- /ko -->
+</p>
+<a href="#" class="btn btn-primary btn-large" data-bind="click: switchToPlainText, visible:!isPlainText()">View in plain text</a>
+<a href="#" class="btn btn-primary btn-large" data-bind="click: switchToInflatedText, visible:isPlainText">View inflated text</a>
+<span class="pull-right">posted by
+    <span class="glyphicon glyphicon-user"> <strong data-bind="text: author"></strong> on </span>
+    <span data-bind="text: createdOn"></span>
+</span>
