@@ -83,21 +83,6 @@ namespace FunckyApp.Tests.Features
                         "http://schemas.datacontract.org/2004/07/FunckyApp.Models"});
 #line 7
  testRunner.And("xml namespace aliases are", ((string)(null)), table1, "And ");
-#line hidden
-        }
-        
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("JSON post to SOAP service")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "WebAPIToWCF")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("xml.namespaces.keep")]
-        public virtual void JSONPostToSOAPService()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("JSON post to SOAP service", new string[] {
-                        "xml.namespaces.keep"});
-#line 13
-this.ScenarioSetup(scenarioInfo);
-#line 5
- this.FeatureBackground();
 #line 16
  testRunner.Given("url is \'api/scripts/\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
@@ -227,7 +212,6 @@ this.ScenarioSetup(scenarioInfo);
 #line 64
  testRunner.And("the following assertions against response should pass:", ((string)(null)), table6, "And ");
 #line hidden
-            this.ScenarioCleanup();
         }
     }
 }

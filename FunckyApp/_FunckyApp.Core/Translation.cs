@@ -23,7 +23,7 @@ namespace FunckyApp.Core
             return this;
         }
 
-
+        public int InflationRate { get; set; }
         public string InflatedPhrase
         {
             get { return Fragments.Aggregate(string.Empty, (prev, curr) => prev + curr.InflatedText); }

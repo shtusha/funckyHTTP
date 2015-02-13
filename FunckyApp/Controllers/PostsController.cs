@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using FunckyApp.Core;
 using FunckyApp.DataAccess;
@@ -29,15 +27,18 @@ namespace FunckyApp.Controllers
             var response = await PostRepository.FindAllAsync();
 
             if (!response.Success) { return GetErrorResult(response); }
-
+            
+            
             return Ok(new PostsViewModel
             {
-                Posts = response.Entities.Select(a => new PostHeaderViewModel
+                Posts = response.Entities.Select(a => 
+                    new PostHeaderViewModel
                 {
                     Author = a.Author,
                     CreatedOn = a.CreatedOn.ToString("MMMM dd, yyyy"),
-                    Title = new Translation(a.Message.Select(b => new Fragment(b.OriginalText, b.InflatedText)))
-                        .InflatedPhrase,
+                    
+                    Title = InflatedTextViewModelFromTransaltion(
+                        new Translation(a.Message.Select(b => new Fragment(b.OriginalText, b.InflatedText)))),
                     Links = new [] { new Link("details", Url.Route("posts.get", new {id = a.Id}) ) }
                 }).ToArray(),
                 Links = new[]
@@ -92,12 +93,9 @@ namespace FunckyApp.Controllers
         {
             if (!ModelState.IsValid) { return BadRequest(ModelState); }
 
-            var translation = TranslationEngine.Translate(post.Message);
+            var translation = TranslationEngine.Translate(post.Message, post.InflationRate);
 
-            return Ok(new PreviewViewModel
-            {
-                InflatedText = translation.InflatedPhrase
-            });
+            return Ok(InflatedTextViewModelFromTransaltion(translation));
         }
 
         [Authorize]
@@ -113,19 +111,7 @@ namespace FunckyApp.Controllers
 
         }
 
-        private string GetUserName()
-        {
-            var identity = User.Identity as ClaimsIdentity;
-            if (identity != null)
-            {
-                var nameIdentifierClaim = identity.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier);
-                if (nameIdentifierClaim != null)
-                {
-                    return nameIdentifierClaim.Value;
-                }
-            }
-            return null;
-        }
+        
 
         #region Mappers
 
@@ -150,16 +136,17 @@ namespace FunckyApp.Controllers
 
         private T CommentEntityFromBindingModel<T>(PostBindingModel post) where T : CommentEntity, new()
         {
-            var translation = TranslationEngine.Translate(post.Message);
+            var translation = TranslationEngine.Translate(post.Message, post.InflationRate);
             return new T
             {
-                Author = GetUserName(),
+                Author = UserName,
                 CreatedOn = DateTime.Now,
+                InflationRate = translation.InflationRate,
                 Message = translation.Fragments.Select(a => new InflatedTextFragmentEntity
                 {
                     OriginalText = a.OriginalText,
                     InflatedText = a.IsInflated ? a.InflatedText : null
-                }).ToArray()
+                }).ToArray(),
             };
         }
 
@@ -177,6 +164,18 @@ namespace FunckyApp.Controllers
                 }).ToArray()
             };
         }
+
+        private InflatedTextViewModel InflatedTextViewModelFromTransaltion(Translation translation)
+        {
+            if (translation == null) { return null; }
+            return new InflatedTextViewModel
+            {
+                Inflated = translation.InflatedPhrase,
+                InflationRate = translation.InflationRate,
+                Original = translation.OriginalPhrase
+            };
+        }
+
 
         #endregion
     }

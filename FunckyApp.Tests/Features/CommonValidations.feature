@@ -11,7 +11,7 @@
 	| a     | http://schemas.datacontract.org/2004/07/FunckyApp.Models |
 
 
-Scenario Outline: CommonValidations
+#Scenario Outline: CommonValidations
 
 	Given url is 'Services/ScriptCompilerService.svc'
 	And request content is <content>
@@ -37,9 +37,9 @@ Scenario Outline: CommonValidations
 	| <literalCount>       | 'count(//a:NumericLiteralStatistics[1]/a:LiteralStats)'                       |
 	| <3Count>             | '//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value='3']/a:Count' |
 
-	Scenarios: 
-	| name  | content                  | isValid | invalidTokensCount | identifierCount | literalCount | 3Count |
-	| 1_2   | FILE(Requests\1+2.xml)   | true    | 0                  | 1               | 2            | N/A    |
-	| 2_3   | FILE(Requests\2+3.xml)   | true    | 0                  | 1               | 2            | 1      |
-	| 3_4_5 | FILE(Requests\3+4+5.xml) | true    | 0                  | 1               | 3            | 1      |
-	| b_c   | FILE(Requests\abc.xml)   | true    | 0                  | 3               | 0            | N/A    |
+#	Scenarios: 
+#	| name  | content                  | isValid | invalidTokensCount | identifierCount | literalCount | 3Count |
+#	| 1_2   | FILE(Requests\1+2.xml)   | true    | 0                  | 1               | 2            | N/A    |
+#	| 2_3   | FILE(Requests\2+3.xml)   | true    | 0                  | 1               | 2            | 1      |
+#	| 3_4_5 | FILE(Requests\3+4+5.xml) | true    | 0                  | 1               | 3            | 1      |
+#	| b_c   | FILE(Requests\abc.xml)   | true    | 0                  | 3               | 0            | N/A    |

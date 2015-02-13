@@ -26,6 +26,7 @@ namespace FunckyApp.DataAccess.Post
 
     public class CommentEntity
     {
+        public int InflationRate { get; set; }
         public InflatedTextFragmentEntity[] Message { get; set; }
         public string Author { get; set; }
         public DateTime CreatedOn { get; set; }

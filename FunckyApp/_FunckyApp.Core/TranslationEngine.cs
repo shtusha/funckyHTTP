@@ -60,13 +60,30 @@ namespace FunckyApp.Core
         }
 
 
-        public Translation Translate(string phrase)
+        public Translation Translate(string phrase, int inflationRate = 1)
         {
-            if (phrase == null) { throw new ArgumentNullException("phrase");}
+            if (phrase == null)
+            {
+                throw new ArgumentNullException("phrase");
+            }
+            if (inflationRate < 1 || inflationRate > 5)
+            {
+                throw new ArgumentOutOfRangeException("inflationRate", "must be between 1 and 5");
+            }
 
-            return FindFragments(phrase, 0).Aggregate(
-                new Translation(), 
-                (translation, nextFragment) => translation.AddFragment(nextFragment));
+            var translation = FindFragments(phrase, 0).Aggregate(
+                new Translation(),
+                (trans, nextFragment) => trans.AddFragment(nextFragment));
+
+            for (int i = 1; i < inflationRate; i++)
+            {
+                translation = FindFragments(translation.InflatedPhrase, 0).Aggregate(
+                        new Translation(),
+                        (trans, nextFragment) => trans.AddFragment(nextFragment));
+            }
+
+            translation.InflationRate = inflationRate;
+            return translation;
         }
 
         private IEnumerable<Fragment> FindFragments(string input, int iteration)

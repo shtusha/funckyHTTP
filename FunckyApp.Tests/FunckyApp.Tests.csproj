@@ -94,8 +94,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Features\Json.feature.cs">
-      <DependentUpon>Json.feature</DependentUpon>
+    <Compile Include="Features\Post.feature.cs">
+      <DependentUpon>Post.feature</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Features\Preview.feature.cs">
+      <DependentUpon>Preview.feature</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
@@ -108,6 +113,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>CommonValidations.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\Translations.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Translations.feature</DependentUpon>
     </Compile>
     <Compile Include="Features\WebAPIToWCF.feature.cs">
       <AutoGen>True</AutoGen>
@@ -122,6 +132,9 @@
     <Content Include="Content\Requests\abc.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Content\Requests\tenor.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Content\Requests\tenor.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -139,9 +152,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Features\Json.feature">
+    <None Include="Features\Post.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Json.feature.cs</LastGenOutput>
+      <LastGenOutput>Post.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\Preview.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Preview.feature.cs</LastGenOutput>
     </None>
     <None Include="Features\BasicTests.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
@@ -150,6 +167,10 @@
     <None Include="Features\CommonValidations.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>CommonValidations.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\Translations.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Translations.feature.cs</LastGenOutput>
     </None>
     <None Include="Features\WebAPIToWCF.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

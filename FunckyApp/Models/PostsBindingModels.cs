@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FunckyApp.Models
 {
@@ -7,6 +8,8 @@ namespace FunckyApp.Models
         [Required]
         public string Message { get; set; }
 
-        public string InReplyTo { get; set; }
+        [Required]
+        [Range(1, 5)]
+        public int InflationRate { get; set; }
     }
 }

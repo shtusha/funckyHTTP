@@ -1,4 +1,6 @@
-﻿using System.Web.Http;
+﻿using System.Linq;
+using System.Security.Claims;
+using System.Web.Http;
 using FunckyApp.DataAccess;
 
 namespace FunckyApp
@@ -28,6 +30,24 @@ namespace FunckyApp
                 return BadRequest(ModelState);
             }
 
+            return null;
+        }
+
+        protected bool IsAuthenticated { get { return User.Identity.IsAuthenticated; } }
+
+        protected string UserName { get { return GetUserName(); } }
+
+        private string GetUserName()
+        {
+            var identity = User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                var nameIdentifierClaim = identity.Claims.FirstOrDefault(a => a.Type == ClaimTypes.NameIdentifier);
+                if (nameIdentifierClaim != null)
+                {
+                    return nameIdentifierClaim.Value;
+                }
+            }
             return null;
         }
     }

@@ -82,26 +82,10 @@ namespace FunckyApp.Tests.Features
                         "http://schemas.datacontract.org/2004/07/FunckyApp.Models"});
 #line 9
  testRunner.And("xml namespace aliases are", ((string)(null)), table1, "And ");
-#line hidden
-        }
-        
-        public virtual void CommonValidations(string name, string content, string isValid, string invalidTokensCount, string identifierCount, string literalCount, string _3Count, string[] exampleTags)
-        {
-            string[] @__tags = new string[] {
-                    "xml.namespaces.keep"};
-            if ((exampleTags != null))
-            {
-                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
-            }
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("CommonValidations", @__tags);
-#line 14
-this.ScenarioSetup(scenarioInfo);
-#line 7
- this.FeatureBackground();
 #line 16
  testRunner.Given("url is \'Services/ScriptCompilerService.svc\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 17
- testRunner.And(string.Format("request content is {0}", content), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("request content is <content>", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
@@ -131,92 +115,23 @@ this.ScenarioSetup(scenarioInfo);
                         "expected",
                         "query"});
             table3.AddRow(new string[] {
-                        string.Format("{0}", isValid),
+                        "<isValid>",
                         "\'//a:IsValid\'"});
             table3.AddRow(new string[] {
-                        string.Format("{0}", invalidTokensCount),
+                        "<invalidTokensCount>",
                         "\'count(//a:InvalidTokens/child::node())\'"});
             table3.AddRow(new string[] {
-                        string.Format("{0}", identifierCount),
+                        "<identifierCount>",
                         "\'count(//a:IdentifierStats)\'"});
             table3.AddRow(new string[] {
-                        string.Format("{0}", literalCount),
+                        "<literalCount>",
                         "\'count(//a:NumericLiteralStatistics[1]/a:LiteralStats)\'"});
             table3.AddRow(new string[] {
-                        string.Format("{0}", _3Count),
+                        "<3Count>",
                         "\'//a:NumericLiteralStatistics[1]/a:LiteralStats[a:Value=\'3\']/a:Count\'"});
 #line 32
  testRunner.And("the following assertions against response should pass:", ((string)(null)), table3, "And ");
 #line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("CommonValidations")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "CommonValidations")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("xml.namespaces.keep")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("VariantName", "1_2")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:name", "1_2")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:content", "FILE(Requests\\1+2.xml)")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:isValid", "true")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:invalidTokensCount", "0")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:identifierCount", "1")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:literalCount", "2")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:3Count", "N/A")]
-        public virtual void CommonValidations_1_2()
-        {
-            this.CommonValidations("1_2", "FILE(Requests\\1+2.xml)", "true", "0", "1", "2", "N/A", ((string[])(null)));
-        }
-        
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("CommonValidations")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "CommonValidations")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("xml.namespaces.keep")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("VariantName", "2_3")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:name", "2_3")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:content", "FILE(Requests\\2+3.xml)")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:isValid", "true")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:invalidTokensCount", "0")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:identifierCount", "1")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:literalCount", "2")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:3Count", "1")]
-        public virtual void CommonValidations_2_3()
-        {
-            this.CommonValidations("2_3", "FILE(Requests\\2+3.xml)", "true", "0", "1", "2", "1", ((string[])(null)));
-        }
-        
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("CommonValidations")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "CommonValidations")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("xml.namespaces.keep")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("VariantName", "3_4_5")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:name", "3_4_5")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:content", "FILE(Requests\\3+4+5.xml)")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:isValid", "true")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:invalidTokensCount", "0")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:identifierCount", "1")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:literalCount", "3")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:3Count", "1")]
-        public virtual void CommonValidations_3_4_5()
-        {
-            this.CommonValidations("3_4_5", "FILE(Requests\\3+4+5.xml)", "true", "0", "1", "3", "1", ((string[])(null)));
-        }
-        
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("CommonValidations")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "CommonValidations")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("xml.namespaces.keep")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("VariantName", "b_c")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:name", "b_c")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:content", "FILE(Requests\\abc.xml)")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:isValid", "true")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:invalidTokensCount", "0")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:identifierCount", "3")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:literalCount", "0")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("Parameter:3Count", "N/A")]
-        public virtual void CommonValidations_B_C()
-        {
-            this.CommonValidations("b_c", "FILE(Requests\\abc.xml)", "true", "0", "3", "0", "N/A", ((string[])(null)));
         }
     }
 }

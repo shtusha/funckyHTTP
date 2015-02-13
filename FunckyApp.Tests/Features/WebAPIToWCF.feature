@@ -10,7 +10,7 @@
 
 @xml.namespaces.keep
 
-Scenario: JSON post to SOAP service
+#Scenario: JSON post to SOAP service
 
 	#first post new script
 	Given url is 'api/scripts/'

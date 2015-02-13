@@ -5,7 +5,7 @@
         self.callback = options.callback;
         self.addPostUrl = options.addUrl;
         self.previewPostUrl = options.previewUrl;
-        self.title(options.title);
+        self.title(options.title.inflated);
     };
 
 
@@ -29,11 +29,12 @@
             self.loading(true);
 
             dataModel.postData(self.previewPostUrl, {
-                message: self.message()
+                message: self.message(),
+                inflationRate: 1
             })
                 .done(function (data) {
                     self.loading(false);
-                self.preview(data.inflatedText);
+                self.preview(data.inflated);
 
             }).failJSON(function (data) {
                     app.errors.push("Error generating preview.");
@@ -47,7 +48,8 @@
             self.loading(true);
 
             dataModel.postData(self.addPostUrl, {
-                    message: self.message()
+                message: self.message(),
+                inflationRate: 1
                 })
                 .done(function(data) {
                     self.loading(false);

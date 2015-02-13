@@ -1,4 +1,4 @@
 ﻿<PostBindingModel xmlns="http://schemas.datacontract.org/2004/07/FunckyApp.Models">
+  <InflationRate>1</InflationRate>
   <Message>Tenor with hungry tendencies ate a tenderloin today</Message>
-  <InReplyTo></InReplyTo>
 </PostBindingModel>

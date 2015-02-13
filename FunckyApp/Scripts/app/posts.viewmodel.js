@@ -60,7 +60,7 @@ function PostHeaderViewModel(app, data, dataModel) {
 
     self.author = ko.observable(data.author);
     self.createdOn = ko.observable(data.createdOn);
-    self.title = ko.observable(data.title);
+    self.title = ko.observable(data.title.inflated);
 
     self.detailsLocation = data.links[0].href;
 
