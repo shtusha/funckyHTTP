@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Configuration;
-using System.Security.Cryptography;
 using System.Xml.XPath;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TechTalk.SpecFlow;
 using FunckyHttp.StepDefinitions;
 using System.Xml.Xsl;
 using System.Xml;
+using FluentAssertions;
 
 namespace FunckyHttp.Common
 {
@@ -89,13 +84,17 @@ namespace FunckyHttp.Common
         [StepArgumentTransformation(@"response header (.*)")]
         public IRegexTarget RegexTargetFromHeader(string headerName)
         {
-            return new RegexTargetMapper(()=> ScenarioContextStore.HttpCallContext.Response.Headers[headerName]);
+            return new RegexTargetMapper(
+                ()=> ScenarioContextStore.HttpCallContext.Response.Headers[headerName],
+                $"response header {headerName}");
         }
 
         [StepArgumentTransformation(@"query result")]
         public IRegexTarget RegexTargetFromQueryResult()
         {
-            return new RegexTargetMapper(() => ScenarioContextStore.QueryResult.ToString());
+            return new RegexTargetMapper(
+                () => ScenarioContextStore.QueryResult.ToString(),
+                "query result");
         }
 
         //TODO: switch to uri instead of file.
@@ -146,7 +145,9 @@ namespace FunckyHttp.Common
         [StepArgumentTransformation(@"request content")]
         public IXslTransformable XsltTransformableFromRequestContent()
         {
-            Assert.IsNotNull(ScenarioContextStore.HttpCallContext.Request.Content, "Request Content is null");
+            ScenarioContextStore.HttpCallContext.Request.Content
+                .Should()
+                .NotBeNull("Request Content is required");
             return new RequestContentTransform();
         }
 

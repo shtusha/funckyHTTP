@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FluentAssertions;
 using TechTalk.SpecFlow;
 
 
@@ -55,7 +55,8 @@ namespace FunckyHttp.StepDefinitions
         [When(@"(.*) is transformed into (.*)")]
         public void WhenSourceIsTransformedInto(IXsltSource source, IXsltResult destination)
         {
-            Assert.IsNotNull(ScenarioContextStore.XSLTransform, "XSL Transformation is null");
+
+            ScenarioContextStore.XSLTransform.Should().NotBeNull("XSL Transformation is needed to transform");
             var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
             //Debug.WriteLine("XML content prior to transform:{0}{1}", Environment.NewLine, source.TransformationSource.BytesToXML("xml").CreateNavigator().InnerXml);
 
@@ -102,7 +103,7 @@ namespace FunckyHttp.StepDefinitions
         public void WhenTheFollowingQueryIsRunAgainstRequestMultiline(string qry)
         {
             WhenTheFollowingQueryIsRunAgainstRequest(qry);
-            Debug.WriteLine(string.Format("xpath.query.result {0}", ScenarioContextStore.QueryResult));
+            Debug.WriteLine($"xpath.query.result {ScenarioContextStore.QueryResult}");
         }
 
         [When(@"query description is '(.*)'")]
@@ -114,35 +115,38 @@ namespace FunckyHttp.StepDefinitions
         [Then(@"the result should be (true|false)")]
         public void ThenTheResultShouldBe(bool expected)
         {
-            bool actual;
-            if (bool.TryParse(ScenarioContextStore.QueryResult.ToString(), out actual))
-            {
-                Assert.AreEqual(expected, actual, GetQueryDescription());
-            }
-            else
-            {
-                Assert.Fail("result to expected type mismatch.\n{0}", GetQueryDescription());
-            }
+            ScenarioContextStore.QueryResult.ToString()
+                            .Should()
+                            .BeParsableToBoolean($"that's the expected type of result for { GetQueryDescription() }");
+            var actual = bool.Parse(ScenarioContextStore.QueryResult.ToString());
+            actual
+                .Should()
+                .Be(expected, $"that's the expected result for {GetQueryDescription()}");
         }
 
         [Then(@"the result should be ([-]?[0-9]*\.?[0-9]+)")]
         public void ThenTheResultShouldBe(decimal expected)
         {
-            decimal actual;
-            if (decimal.TryParse(ScenarioContextStore.QueryResult.ToString(), out actual))
-                Assert.AreEqual(expected, actual, GetQueryDescription());
-            else
-                Assert.Fail("result to expected type mismatch.\n{0}", GetQueryDescription());
+            ScenarioContextStore.QueryResult.ToString()
+                .Should()
+                .BeNumeric($"that's the expected type of result for { GetQueryDescription() }");
+            var actual = decimal.Parse(ScenarioContextStore.QueryResult.ToString());
+            actual
+                   .Should()
+                   .Be(expected, $"that's the expected result for {GetQueryDescription()}");
         }
 
         [Then(@"the result should be '(.*)'")]
         public void ThenTheResultShouldBe(string expected)
         {
-            var actual = ScenarioContextStore.QueryResult as string;
-            if (actual != null)
-                Assert.AreEqual(expected, actual, GetQueryDescription());
-            else
-                Assert.Fail("result to expected type mismatch.\n{0}", GetQueryDescription());
+            ScenarioContextStore.QueryResult
+                .Should()
+                .BeOfType<string>($"that's the expected type of result for { GetQueryDescription() }");
+
+            ScenarioContextStore.QueryResult.ToString()
+                .Should()
+                .Be(expected, $"that's the expected result for { GetQueryDescription() }");
+
         }
 
 

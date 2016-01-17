@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Net;
-using System.Threading.Tasks;
-using System.Collections;
 using System.Xml.XPath;
 using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FunckyHttp.Common
 {

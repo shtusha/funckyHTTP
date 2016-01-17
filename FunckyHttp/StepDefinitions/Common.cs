@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FluentAssertions;
+
 using FunckyHttp.Common;
 
 namespace FunckyHttp.StepDefinitions
@@ -24,26 +25,32 @@ namespace FunckyHttp.StepDefinitions
         [Then("(.*) should match (.*)")]
         public static void ShouldMatchRegex(IRegexTarget target, Wrapped<string> pattern)
         {
-            Assert.IsTrue(System.Text.RegularExpressions.Regex.IsMatch(target.Value, pattern),
-                string.Format("{0} does not match regex pattern {1}", target.Value, pattern));
+            Debug.WriteLine($"regex.target:\n{target.Description}");
+            Debug.WriteLine($"regex.pattern:\n{pattern}");
+            target.Value
+                .Should()
+                .MatchRegex(pattern, $"{target.Description} is expected to match that pattern");
         }
     }
     public interface IRegexTarget
         {
             string Value { get; }
+            string Description { get; }
         }
 
     public class RegexTargetMapper : IRegexTarget
     {
         private Func<string> _map;
-        public RegexTargetMapper(Func<string> map)
+        public RegexTargetMapper(Func<string> map, string description)
         {
             _map = map;
+            Description = description;
         }
         public string Value { 
             get {
                 return _map.Invoke();
             }
         }
+        public string Description { get; private set; }
     }
 }

@@ -13,6 +13,10 @@ using System.IO;
 using System.Xml.Xsl;
 using TechTalk.SpecFlow;
 using Newtonsoft.Json;
+using FluentAssertions;
+using FluentAssertions.Equivalency;
+using FluentAssertions.Execution;
+using FluentAssertions.Primitives;
 
 namespace FunckyHttp.Common
 {
@@ -86,5 +90,26 @@ namespace FunckyHttp.Common
                 }
             }
         }
+
+        public static void BeNumeric(this StringAssertions assertions, string reason, params object[] reasonArgs)
+        {
+            decimal value;
+            Execute.Assertion
+                .ForCondition(decimal.TryParse(assertions.Subject, out value))
+                .BecauseOf(reason, reasonArgs)
+                .FailWith("{0} should be a numeric string{reason}, but it's not.", assertions.Subject);
+
+        }
+
+        public static void BeParsableToBoolean(this StringAssertions assertions, string reason, params object[] reasonArgs)
+        {
+            bool value;
+            Execute.Assertion
+                .ForCondition(bool.TryParse(assertions.Subject, out value))
+                .BecauseOf(reason, reasonArgs)
+                .FailWith("{0} should be parsable to boolean{reason}, but it's not.", assertions.Subject);
+
+        }
+
     }
 }
