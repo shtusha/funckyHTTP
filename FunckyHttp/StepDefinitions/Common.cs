@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
@@ -21,6 +22,14 @@ namespace FunckyHttp.StepDefinitions
             Debug.WriteLine("All is cool");
         }
 
+        [Given(@"(.*) is saved into \[(.*)\]")]
+        [When(@"(.*) is saved into \[(.*)\]")]
+        [Then(@"(.*) is saved into \[(.*)\]")]
+        public static void SetVariable(IVariableValue source, string variableName)
+        {
+            ScenarioContextStore.Variables[variableName] = source.Value;
+        }
+
 
         [Then("(.*) should match (.*)")]
         public static void ShouldMatchRegex(IRegexTarget target, Wrapped<string> pattern)
@@ -32,25 +41,36 @@ namespace FunckyHttp.StepDefinitions
                 .MatchRegex(pattern, $"{target.Description} is expected to match that pattern");
         }
     }
-    public interface IRegexTarget
-        {
-            string Value { get; }
-            string Description { get; }
-        }
 
-    public class RegexTargetMapper : IRegexTarget
+    public interface IValueSource<T>
     {
-        private Func<string> _map;
-        public RegexTargetMapper(Func<string> map, string description)
+        T Value { get; }
+        string Description { get; }
+    }
+    public class ValueProvider<T> : IValueSource<T> 
+    {
+        private Func<T> _valueFunc;
+
+        public ValueProvider(Func<T> valueFunc, string description)
         {
-            _map = map;
+            _valueFunc = valueFunc;
             Description = description;
         }
-        public string Value { 
-            get {
-                return _map.Invoke();
-            }
-        }
-        public string Description { get; private set; }
+
+        public T Value => _valueFunc.Invoke();
+        public string Description { get; }
     }
+
+    public interface IRegexTarget : IValueSource<string> { }
+    public class RegexTargetProvider : ValueProvider<string>, IRegexTarget
+    {
+        public RegexTargetProvider(Func<string> valueFunc, string description) : base(valueFunc, description){}
+    }
+
+    public interface IVariableValue : IValueSource<object> { }
+    public class VariableValueProvider :ValueProvider<object>, IVariableValue
+    {
+        public VariableValueProvider(Func<object> valueFunc, string description) : base(valueFunc, description){}
+    }
+
 }

@@ -9,6 +9,11 @@ namespace FunckyHttp.Common
 {
     public static class ScenarioContextStore
     {
+        static ScenarioContextStore ()
+        {
+            ScenarioContext.Current["variables"] = new Dictionary<string, object>();
+        }
+
         public static string JsonToXMLRootElementName
         {
             get { return ScenarioContext.Current.GetContextItem<string>("xml.fromJson.rootElementName"); }
@@ -72,5 +77,8 @@ namespace FunckyHttp.Common
         }
 
         public static XslCompiledTransform XSLTransform { get; set; }
+
+        public static Dictionary<string, object> Variables 
+            => ScenarioContext.Current.GetContextItem<Dictionary<string, object>>("variables");
     }
 }

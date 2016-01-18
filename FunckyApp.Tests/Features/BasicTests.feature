@@ -41,7 +41,9 @@ Scenario: Accept header handling
 	| name   | value             |
 	| Accept | 'application/xml' |
 	When I submit a get request
+	And response header Content-Type is saved into [foo]
 	Then response header Content-Type should match 'application/xml'
+	And [foo] should match 'application/xml'
 
 #When accept header is json response should be json	
 	Given url is 'api/posts'

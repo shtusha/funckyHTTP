@@ -21,6 +21,15 @@ namespace FunckyHttp.Common
             return value;
         }
 
+
+        [StepArgumentTransformation(@"\[(.*)\]")]
+        public Wrapped<string> StringFromVariable(string variable)
+        {
+            return ScenarioContextStore.Variables[variable].ToString();
+        }
+
+
+
         [StepArgumentTransformation(@"CONFIG\((.*)\)")]
         public Wrapped<string> StringFromConfig(string key)
         {
@@ -80,11 +89,16 @@ namespace FunckyHttp.Common
                 Encoding.Default.GetBytes(stringResult);
         }
 
+        [StepArgumentTransformation(@"\[(.*)\]")]
+        public IRegexTarget RegexTargetFromVariable(string variable)
+        {
+            return new RegexTargetProvider(() => ScenarioContextStore.Variables[variable].ToString(), $"[{variable}]");
+        }
 
         [StepArgumentTransformation(@"response header (.*)")]
         public IRegexTarget RegexTargetFromHeader(string headerName)
         {
-            return new RegexTargetMapper(
+            return new RegexTargetProvider(
                 ()=> ScenarioContextStore.HttpCallContext.Response.Headers[headerName],
                 $"response header {headerName}");
         }
@@ -92,9 +106,25 @@ namespace FunckyHttp.Common
         [StepArgumentTransformation(@"query result")]
         public IRegexTarget RegexTargetFromQueryResult()
         {
-            return new RegexTargetMapper(
+            return new RegexTargetProvider(
                 () => ScenarioContextStore.QueryResult.ToString(),
                 "query result");
+        }
+
+        [StepArgumentTransformation(@"query result")]
+        public IVariableValue VariableValueFromQueryResult()
+        {
+            return new VariableValueProvider(
+                () => ScenarioContextStore.QueryResult,
+                "query result");
+        }
+
+        [StepArgumentTransformation(@"response header (.*)")]
+        public IVariableValue VariableValueFromHeader(string headerName)
+        {
+            return new VariableValueProvider(
+                () => ScenarioContextStore.HttpCallContext.Response.Headers[headerName],
+                $"response header {headerName}");
         }
 
         //TODO: switch to uri instead of file.
