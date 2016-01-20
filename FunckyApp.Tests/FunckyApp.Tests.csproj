@@ -125,6 +125,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WebAPIToWCF.feature</DependentUpon>
     </Compile>
+    <Compile Include="Init.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

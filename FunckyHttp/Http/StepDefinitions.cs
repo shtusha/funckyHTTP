@@ -12,10 +12,10 @@ using FunckyHttp.Common;
 using System.Xml.XPath;
 using FluentAssertions;
 
-namespace FunckyHttp.StepDefinitions
+namespace FunckyHttp.Http
 {
     [Binding]
-    public class Http : Steps
+    public class StepDefinitions : Steps
     {
         //private Lazy<HttpWebResponse> _RequestInvoker;
 
@@ -38,7 +38,7 @@ namespace FunckyHttp.StepDefinitions
                     lastResponse = ScenarioContextStore.HttpCallContext.Response;
                 }
 
-                ScenarioContextStore.HttpCallContext = new HttpMethodCallContext(uri.AbsoluteUri, ScenarioContextStore.RequestHeaders)
+                ScenarioContextStore.HttpCallContext = new HttpMethodCallContext(uri.AbsoluteUri, ScenarioContextStore.GlobalRequestHeaders)
                 {
                     LastResponse = lastResponse
                 };
@@ -95,7 +95,7 @@ namespace FunckyHttp.StepDefinitions
         [Given(@"request headers are")]
         public void GivenRequestHeadersAre(Table table)
         {
-            ScenarioContextStore.RequestHeaders.Clear();
+            ScenarioContextStore.GlobalRequestHeaders.Clear();
             foreach (var row in table.Rows)
             {
                 Given(string.Format("add a GLOBAL request header {0} : {1}", row["name"], row["value"]));
@@ -107,12 +107,12 @@ namespace FunckyHttp.StepDefinitions
                 GivenAddHeaders(table);
             }
             Debug.WriteLine("http.request.headers:");
-            ScenarioContextStore.RequestHeaders.ToList().ForEach(a=>Debug.WriteLine("{0} : {1}", a.Key, a.Value));
+            ScenarioContextStore.GlobalRequestHeaders.ToList().ForEach(a=>Debug.WriteLine("{0} : {1}", a.Key, a.Value));
 
         }
 
         
-        [When(@"*add reqauest headers")]
+        [When(@"*adds? request headers")]
         public void WhenAddHeaders(Table table)
         {
             foreach (var row in table.Rows)
@@ -123,7 +123,7 @@ namespace FunckyHttp.StepDefinitions
             ScenarioContextStore.HttpCallContext.Request.Headers.ToList().ForEach(a => Debug.WriteLine("{0} : {1}", a.Key, a.Value));
         }
 
-        [Given(@"*add request headers")]
+        [Given(@"*adds? request headers")]
         public void GivenAddHeaders(Table table)
         {
             foreach (var row in table.Rows)
@@ -134,22 +134,22 @@ namespace FunckyHttp.StepDefinitions
             ScenarioContextStore.HttpCallContext.Request.Headers.ToList().ForEach(a => Debug.WriteLine("{0} : {1}", a.Key, a.Value));
         }
 
-        [When(@"*add a request header (.*) : (.*)")]
+        [When(@"*adds? a request header (.*) : (.*)")]
         public void WhenAddHeader(string name, Wrapped<string> value)
         {
             ScenarioContextStore.HttpCallContext.Request.Headers[name] = value;
         }
 
-        [Given(@"*add a request header (.*) : (.*)")]
+        [Given(@"*adds? a request header (.*) : (.*)")]
         public void GivenAddHeader(string name, Wrapped<string> value)
         {
             ScenarioContextStore.HttpCallContext.Request.Headers[name] = value;
         }
 
-        [Given(@"*add a GLOBAL request header (.*) : (.*)")]
+        [Given(@"*adds? a GLOBAL request header (.*) : (.*)")]
         public void GivenGlobalAddHeader(string name, Wrapped<string> value)
         {
-            ScenarioContextStore.RequestHeaders[name] = value;
+            ScenarioContextStore.GlobalRequestHeaders[name] = value;
         }
 
         [Given(@"request content is (.*)")]

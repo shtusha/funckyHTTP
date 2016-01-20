@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FunckyHttp.Common
+namespace FunckyHttp
 {
     //This type is needed for StepArgument transformations to work when transforming T into T.
     public class Wrapped<T> where T : class

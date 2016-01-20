@@ -1,28 +1,22 @@
 ﻿using System.Collections.Generic;
-using System.Xml.XPath;
 using System.Xml;
+using System.Xml.XPath;
 using System.Xml.Xsl;
 using TechTalk.SpecFlow;
 
-
-namespace FunckyHttp.Common
+namespace FunckyHttp
 {
     public static class ScenarioContextStore
     {
-        static ScenarioContextStore ()
-        {
-            ScenarioContext.Current["variables"] = new Dictionary<string, object>();
-        }
-
         public static string JsonToXMLRootElementName
         {
             get { return ScenarioContext.Current.GetContextItem<string>("xml.fromJson.rootElementName"); }
             set { ScenarioContext.Current["xml.fromJson.rootElementName"] = value; }
         }
 
-        public static bool DropXmlNamespaces 
+        public static bool DropXmlNamespaces
         {
-            get { return (bool)ScenarioContext.Current["xml.namespaces.drop"]; }
+            get { return (bool) ScenarioContext.Current["xml.namespaces.drop"]; }
             set { ScenarioContext.Current["xml.namespaces.drop"] = value; }
         }
 
@@ -31,6 +25,7 @@ namespace FunckyHttp.Common
             get { return ScenarioContext.Current.GetContextItem<XPathExpression>("xpath.query"); }
             set { ScenarioContext.Current["xpath.query"] = value; }
         }
+
         public static string QueryDescription
         {
             get { return ScenarioContext.Current.GetContextItem<string>("xpath.query.description"); }
@@ -49,7 +44,7 @@ namespace FunckyHttp.Common
             set { ScenarioContext.Current["xml.namespacemanager"] = value; }
         }
 
-        public static Dictionary<string, string> RequestHeaders
+        public static Dictionary<string, string> GlobalRequestHeaders
         {
             get { return ScenarioContext.Current.GetContextItem<Dictionary<string, string>>("http.request.headers"); }
             set { ScenarioContext.Current["http.request.headers"] = value; }
@@ -78,7 +73,11 @@ namespace FunckyHttp.Common
 
         public static XslCompiledTransform XSLTransform { get; set; }
 
-        public static Dictionary<string, object> Variables 
-            => ScenarioContext.Current.GetContextItem<Dictionary<string, object>>("variables");
+        public static Dictionary<string, object> Variables
+        {
+            get { return ScenarioContext.Current.GetContextItem<Dictionary<string, object>>("variables"); }
+
+            internal set { ScenarioContext.Current["variables"] = value; }
+        }
     }
 }

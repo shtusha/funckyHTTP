@@ -14,10 +14,10 @@ using TechTalk.SpecFlow;
 
 using FunckyHttp.Common;
 
-namespace FunckyHttp.StepDefinitions
+namespace FunckyHttp.Xml
 {
     [Binding]
-    public class Xml : Steps
+    public class StepDefinitions : Steps
     {
 
         [Given(@"xml namespace aliases are")]
@@ -35,9 +35,7 @@ namespace FunckyHttp.StepDefinitions
         [Given(@"xslt is (.*)")]
         public void GivenXslTransformationIs(XslCompiledTransform xslt)
         {
-
             ScenarioContextStore.XSLTransform = xslt;
-
         }
 
         [Given(@"xslt is")]
@@ -48,6 +46,7 @@ namespace FunckyHttp.StepDefinitions
             {
                 var transform = new XslCompiledTransform();
                 transform.Load(xsltReader);
+                GivenXslTransformationIs(transform);
             }
         }
 
@@ -58,9 +57,6 @@ namespace FunckyHttp.StepDefinitions
 
             ScenarioContextStore.XSLTransform.Should().NotBeNull("XSL Transformation is needed to transform");
             var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
-            //Debug.WriteLine("XML content prior to transform:{0}{1}", Environment.NewLine, source.TransformationSource.BytesToXML("xml").CreateNavigator().InnerXml);
-
-            //using (var xmlReader = XmlTextReader.Create(new MemoryStream(ScenarioContextStore.HttpCallContext.RequestContext.Content), settings))
             using (var xmlReader = XmlTextReader.Create(new MemoryStream(source.TransformationSource), settings))
             {
                 using (var ms = new MemoryStream())
@@ -68,7 +64,6 @@ namespace FunckyHttp.StepDefinitions
                     ScenarioContextStore.XSLTransform.Transform(xmlReader, XmlWriter.Create(ms, ScenarioContextStore.XSLTransform.OutputSettings));
                     ms.Position = 0;
                     destination.TransformedResult = ms.ToArray();
-                    //ScenarioContextStore.HttpCallContext.RequestContext.Content = ms.ToArray();
                 }
             }
         }

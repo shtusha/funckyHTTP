@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 using FluentAssertions;
 
-using FunckyHttp.Common;
-
-namespace FunckyHttp.StepDefinitions
+namespace FunckyHttp.Common
 {
     [Binding]
-    public static class Common  
+    public class StepDefinitions : Steps  
     {
 
         [Given(@"all is cool"), When(@"all is cool"),Then(@"all is cool")]
-        public static void AllIsCool()
+        public void AllIsCool()
         {
             Debug.WriteLine("All is cool");
         }
@@ -25,14 +18,14 @@ namespace FunckyHttp.StepDefinitions
         [Given(@"(.*) is saved into \[(.*)\]")]
         [When(@"(.*) is saved into \[(.*)\]")]
         [Then(@"(.*) is saved into \[(.*)\]")]
-        public static void SetVariable(IVariableValue source, string variableName)
+        public void SetVariable(IVariableValue source, string variableName)
         {
             ScenarioContextStore.Variables[variableName] = source.Value;
         }
 
 
         [Then("(.*) should match (.*)")]
-        public static void ShouldMatchRegex(IRegexTarget target, Wrapped<string> pattern)
+        public void ShouldMatchRegex(IRegexTarget target, Wrapped<string> pattern)
         {
             Debug.WriteLine($"regex.target:\n{target.Description}");
             Debug.WriteLine($"regex.pattern:\n{pattern}");

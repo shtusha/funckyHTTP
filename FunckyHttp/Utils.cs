@@ -18,7 +18,7 @@ using FluentAssertions.Equivalency;
 using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
 
-namespace FunckyHttp.Common
+namespace FunckyHttp
 {
     public static class Utils
     {
@@ -27,7 +27,7 @@ namespace FunckyHttp.Common
         static Utils()
         {
             var assembly = Assembly.GetAssembly(typeof(Utils));
-            var stream = assembly.GetManifestResourceStream("FunckyHttp.resources.DropXmlNamespaces.xslt");
+            var stream = assembly.GetManifestResourceStream("FunckyHttp._resources.DropXmlNamespaces.xslt");
             
             
             using (var reader = new XmlTextReader(stream))

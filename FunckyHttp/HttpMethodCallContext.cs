@@ -5,7 +5,7 @@ using System.Net;
 using System.Xml.XPath;
 using System.IO;
 
-namespace FunckyHttp.Common
+namespace FunckyHttp
 {
     public class HttpMethodCallContext
     {
@@ -100,7 +100,7 @@ namespace FunckyHttp.Common
                     {
                         using (var reader = new StreamReader(new MemoryStream(_ContentLazy.Value)))
                         {
-                            Debug.WriteLine("http.response.content:\n{0}", (object)reader.ReadToEnd());                            
+                            Debug.WriteLine("http.response.body:\n{0}", (object)reader.ReadToEnd());                            
                         }
                     }
                     return _ContentLazy.Value;
@@ -171,7 +171,7 @@ namespace FunckyHttp.Common
                 set
                 {
                     _content = value; 
-                    Debug.WriteLine("http.request.content:");
+                    Debug.WriteLine("http.request.body:");
                     Debug.WriteLine(_content.BytesToString());
                 }}
 

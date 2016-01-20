@@ -1,28 +1,22 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Configuration;
-using System.Xml.XPath;
+using System.Text;
 using TechTalk.SpecFlow;
-using FunckyHttp.StepDefinitions;
-using System.Xml.Xsl;
-using System.Xml;
-using FluentAssertions;
 
 namespace FunckyHttp.Common
 {
     [Binding]
     public class Transformations
     {
-        [StepArgumentTransformation(@"'(.*)'")]
+        [StepArgumentTransformation(Constants.Patterns.ValueSources.StringLiteral)]
         public Wrapped<string> StringFromLiteral(string value)
         {
             return value;
         }
 
 
-        [StepArgumentTransformation(@"\[(.*)\]")]
+        [StepArgumentTransformation(Constants.Patterns.ValueSources.Variable)]
         public Wrapped<string> StringFromVariable(string variable)
         {
             return ScenarioContextStore.Variables[variable].ToString();
@@ -36,9 +30,7 @@ namespace FunckyHttp.Common
             return new Wrapped<string>(ConfigurationManager.AppSettings[key]);
         }
 
-
-
-        [StepArgumentTransformation(@"FILE\((.*)\)")]
+        [StepArgumentTransformation(Constants.Patterns.ValueSources.File)]
         public Wrapped<string> StringFromFile(string path)
         {
             var filePath = Path.GetFullPath(Path.Combine(ConfigurationManager.AppSettings["contentPath"], path));
@@ -56,40 +48,25 @@ namespace FunckyHttp.Common
             return ScenarioContextStore.HttpCallContext.Response.Headers[headerName];
         }
 
-        [StepArgumentTransformation(@"FILE\((.*)\)")]
-        public byte[] BytesFromFile(string path)
-        {
-            var filePath = Path.GetFullPath(Path.Combine(ConfigurationManager.AppSettings["contentPath"], path));
-
-            if (File.Exists(filePath))
-            {
-                return File.ReadAllBytes(filePath);
-            }
-            throw new ArgumentException(string.Format("file not found: {0}", filePath ?? "<null>"));
-        }
-
-        [StepArgumentTransformation("'(.*)'")]
-        public byte[] BytesFromstringLiteral(string value)
-        {
-            return value == null ? null : Encoding.Default.GetBytes(value);
-        }
-
         [StepArgumentTransformation(@"query result")]
         public Wrapped<string> StringFromQueryResult()
         {
-            if (ScenarioContextStore.QueryResult == null) { return null; }
-            return ScenarioContextStore.QueryResult.ToString();
+            return WrappedStringFromQueryResult();
         }
 
-        [StepArgumentTransformation(@"query result")]
-        public byte[] BytesFromQueryResults()
+        public static Wrapped<string> WrappedStringFromQueryResult()
         {
-            var stringResult = StringFromQueryResult();
+            return ScenarioContextStore.QueryResult?.ToString();
+        }
+
+        public static byte[] BytesFromQueryResults()
+        {
+            var stringResult = WrappedStringFromQueryResult();
             return stringResult == null ? null :
                 Encoding.Default.GetBytes(stringResult);
         }
 
-        [StepArgumentTransformation(@"\[(.*)\]")]
+        [StepArgumentTransformation(Constants.Patterns.ValueSources.Variable)]
         public IRegexTarget RegexTargetFromVariable(string variable)
         {
             return new RegexTargetProvider(() => ScenarioContextStore.Variables[variable].ToString(), $"[{variable}]");
@@ -103,7 +80,7 @@ namespace FunckyHttp.Common
                 $"response header {headerName}");
         }
 
-        [StepArgumentTransformation(@"query result")]
+        [StepArgumentTransformation(Constants.Patterns.ValueSources.QueryResult)]
         public IRegexTarget RegexTargetFromQueryResult()
         {
             return new RegexTargetProvider(
@@ -111,7 +88,7 @@ namespace FunckyHttp.Common
                 "query result");
         }
 
-        [StepArgumentTransformation(@"query result")]
+        [StepArgumentTransformation(Constants.Patterns.ValueSources.QueryResult)]
         public IVariableValue VariableValueFromQueryResult()
         {
             return new VariableValueProvider(
@@ -125,72 +102,6 @@ namespace FunckyHttp.Common
             return new VariableValueProvider(
                 () => ScenarioContextStore.HttpCallContext.Response.Headers[headerName],
                 $"response header {headerName}");
-        }
-
-        //TODO: switch to uri instead of file.
-        [StepArgumentTransformation(@"FILE\((.*)\)")]
-        public XslCompiledTransform XsltFromFile(string path)
-        {
-            var uri = new Uri(GetFullPath(path)).AbsoluteUri;
-            Debug.WriteLine("xml.transform.source: {0}", (object)uri);
-            var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Fragment };
-            //TODO: Cache
-            LogXSLTContent(uri, settings);
-            using (var xsltReader = XmlTextReader.Create(uri, settings))
-            {
-                             
-                var transform = new XslCompiledTransform();
-                transform.Load(xsltReader);
-                return transform;
-            }
-        }
-
-        private static void LogXSLTContent(string uri, XmlReaderSettings settings)
-        {
-            using (var xsltReader = XmlTextReader.Create(uri, settings))
-            {
-                Debug.WriteLine("xml.transform: {0}", (object)new XPathDocument(xsltReader).CreateNavigator().InnerXml);
-            }
-        }
-
-        class RequestContentTransform : IXslTransformable
-        {
-            public byte[] TransformationSource { get { return ScenarioContextStore.HttpCallContext.Request.Content; } }
-            public byte[] TransformedResult { set { ScenarioContextStore.HttpCallContext.Request.Content = value; } }
-
-        }
-
-        [StepArgumentTransformation(@"query result")]
-        public IXsltSource XsltSourceFromQueryResult()
-        {
-            return new XsltSource(BytesFromQueryResults());
-        }
-
-        [StepArgumentTransformation(@"response")]
-        public IXsltSource XsltSourceFromResponseContent()
-        {
-            return new XsltSource(ScenarioContextStore.HttpCallContext.Response.Content);
-        }
-
-        [StepArgumentTransformation(@"request content")]
-        public IXslTransformable XsltTransformableFromRequestContent()
-        {
-            ScenarioContextStore.HttpCallContext.Request.Content
-                .Should()
-                .NotBeNull("Request Content is required");
-            return new RequestContentTransform();
-        }
-
-        [StepArgumentTransformation(@"request content")]
-        public IXsltResult XsltResultToRequestContent()
-        {
-            return new RequestContentTransform();
-        }
-
-        [StepArgumentTransformation(@"request content")]
-        public IXsltSource XsltSourceFromRequestContent()
-        {
-            return XsltTransformableFromRequestContent();
         }
 
         private static string GetFullPath(string path)
