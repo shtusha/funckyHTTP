@@ -83,7 +83,7 @@ namespace FunckyApp.Tests.Features
                         "Content-Type",
                         "\'text/xml\'"});
 #line 6
- testRunner.Given("request headers are", ((string)(null)), table1, "Given ");
+ testRunner.Given("GLOBAL request headers are", ((string)(null)), table1, "Given ");
 #line hidden
         }
         
@@ -112,18 +112,18 @@ this.FeatureBackground();
 #line 24
  testRunner.Given("url is \'api/posts\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 25
- testRunner.When("I submit a post request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.And("request header Content-Length is \'0\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 26
- testRunner.And("I add a request header Content-Length : \'0\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.When("I submit a post request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 27
  testRunner.Then("response Status Code should be 401", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 30
  testRunner.Given("url is \'api/posts/preview\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 31
  testRunner.And("request content is \'<Foo><Bar/></Foo>\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 33
+#line 32
  testRunner.When("I submit a post request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 34
+#line 33
  testRunner.Then("response Status Code should be 400", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -135,11 +135,11 @@ this.FeatureBackground();
         public virtual void AcceptHeaderHandling()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Accept header handling", ((string[])(null)));
-#line 36
+#line 35
 this.ScenarioSetup(scenarioInfo);
 #line 5
 this.FeatureBackground();
-#line 39
+#line 38
  testRunner.Given("url is \'api/posts\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
@@ -148,32 +148,25 @@ this.FeatureBackground();
             table2.AddRow(new string[] {
                         "Accept",
                         "\'application/xml\'"});
-#line 40
+#line 39
  testRunner.And("request headers are", ((string)(null)), table2, "And ");
+#line 42
+ testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 43
- testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 44
  testRunner.And("response header Content-Type is saved into [foo]", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 45
+#line 44
  testRunner.Then("response header Content-Type should match \'application/xml\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 46
+#line 45
  testRunner.And("[foo] should match \'application/xml\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 49
+#line 48
  testRunner.Given("url is \'api/posts\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "value"});
-            table3.AddRow(new string[] {
-                        "Accept",
-                        "\'application/json\'"});
+#line 49
+ testRunner.And("request header Accept is \'application/json\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 50
- testRunner.And("request headers are", ((string)(null)), table3, "And ");
-#line 53
  testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 54
+#line 51
  testRunner.Then("response header Content-Type should be \'application/json; charset=utf-8\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 55
+#line 52
  testRunner.Then("response header Content-Type should match \'^application/json; charset=utf-8$\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -185,54 +178,54 @@ this.FeatureBackground();
         public virtual void Preview()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Preview", ((string[])(null)));
-#line 58
+#line 55
 this.ScenarioSetup(scenarioInfo);
 #line 5
 this.FeatureBackground();
-#line 60
+#line 57
 testRunner.Given("url is \'api/posts/preview\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 61
+#line 58
 testRunner.And("request content is", "<PostBindingModel xmlns=\"http://schemas.datacontract.org/2004/07/FunckyApp.Models" +
                     "\">\r\n  <InflationRate>1</InflationRate>\r\n  <Message>Tenor with hungry tendencies " +
                     "ate a tenderloin today</Message>\r\n</PostBindingModel>", ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 68
+#line 65
 testRunner.When("I submit a post request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 69
+#line 66
 testRunner.Then("response Status Code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 71
+#line 68
 testRunner.When("the following query is run against response: \'//Inflated\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 72
+#line 69
 testRunner.Then("the result should be \'Elevenor with hungry elevendencies nine a elevenderloin thr" +
                     "eeday\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 75
+#line 72
 testRunner.Given("url is \'api/posts/preview\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 76
+#line 73
 testRunner.And("request content is FILE(Requests\\Tenor.xml)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 78
+#line 75
 testRunner.When("I submit a post request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 79
+#line 76
 testRunner.Then("response Status Code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "expected",
                         "query"});
-            table4.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "\'Elevenor with hungry elevendencies nine a elevenderloin threeday\'",
                         "\'//Inflated\'"});
-            table4.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "\'Tenor with hungry tendencies ate a tenderloin today\'",
                         "\'//Original\'"});
-            table4.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "1",
                         "\'//InflationRate\'"});
-#line 80
-testRunner.And("the following assertions against response should pass:", ((string)(null)), table4, "And ");
-#line 150
+#line 77
+testRunner.And("the following assertions against response should pass:", ((string)(null)), table3, "And ");
+#line 147
  testRunner.Given("url is \'scripts/1234567890\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 151
+#line 148
  testRunner.When("I submit a get request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 152
+#line 149
  testRunner.Then("response Status Code should be 404", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

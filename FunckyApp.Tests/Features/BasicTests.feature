@@ -3,7 +3,7 @@
 	I want to make sure proper response codes are returned
 
 Background:
-	Given request headers are
+	Given GLOBAL request headers are
 	| name         | value             |
 	| Accept       | 'application/xml' |
 	| Content-Type | 'text/xml'        |
@@ -22,14 +22,13 @@ Scenario: Edge cases
 
 #Send unauthorized post
 	Given url is 'api/posts'
+	And request header Content-Length is '0'
 	When I submit a post request
-	And I add a request header Content-Length : '0'
 	Then response Status Code should be 401
 	
 #Send invalid post
 	Given url is 'api/posts/preview'
 	And request content is '<Foo><Bar/></Foo>'
-
 	When I submit a post request
 	Then response Status Code should be 400
 
@@ -47,9 +46,7 @@ Scenario: Accept header handling
 
 #When accept header is json response should be json	
 	Given url is 'api/posts'
-	And request headers are
-	| name   | value              |
-	| Accept | 'application/json' |
+	And request header Accept is 'application/json'
 	When I submit a get request
 	Then response header Content-Type should be 'application/json; charset=utf-8'
 	Then response header Content-Type should match '^application/json; charset=utf-8$'

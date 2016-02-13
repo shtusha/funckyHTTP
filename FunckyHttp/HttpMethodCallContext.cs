@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Xml.XPath;
 using System.IO;
+using System.Linq;
 
 namespace FunckyHttp
 {
@@ -12,33 +13,18 @@ namespace FunckyHttp
 
         private readonly Lazy<ResponseContext> _responseLazy;
 
-        public ResponseContext LastResponse { get; set; }
+        //public ResponseContext LastResponse { get; set; }
 
-        public RequestContext Request { get; private set; }
+        public RequestContext Request { get; }
 
 
 
-        public ResponseContext Response
+        public ResponseContext Response => _responseLazy.Value;
+
+
+        public HttpMethodCallContext(string url, IDictionary<string, string> globalHeaders = null)
         {
-            get { return Request.Verb != null ? _responseLazy.Value : LastResponse; }
-        }
- 
-        
-
-
-        public HttpMethodCallContext(string url, IDictionary<string, string> headers)
-            : this(url)
-        {
-            foreach (var item in headers)
-            {
-                Request.Headers.Add(item.Key, item.Value);    
-            }
-        }
-
-
-        public HttpMethodCallContext(string url)
-        {
-            Request = new RequestContext(url);
+            Request = new RequestContext(url, globalHeaders);
             _responseLazy = new Lazy<ResponseContext>(() => new ResponseContext(Request.BuildWebRequest()), true);
         }
             
@@ -145,10 +131,11 @@ namespace FunckyHttp
 
         public class RequestContext
         {
-            public RequestContext(string url)
+            public RequestContext(string url, IDictionary<string, string> globalHeaders )
             {
                 Url = url;
                 Headers = new Dictionary<string, string>();
+                GlobalHeaders = globalHeaders ?? new Dictionary<string, string>();
             }
 
             private string _url;
@@ -162,8 +149,9 @@ namespace FunckyHttp
                 }
             }
 
-            public IDictionary<string, string> Headers { get; private set; }
+            public IDictionary<string, string> Headers { get; }
 
+            public IDictionary<string, string> GlobalHeaders { get; } 
 
             private byte[] _content;
             public byte[] Content {
@@ -204,7 +192,7 @@ namespace FunckyHttp
 
             private void SetHeaders(HttpWebRequest request)
             {
-                foreach (var header in Headers)
+                foreach (var header in GlobalHeaders.Concat(Headers))
                 {
                     switch (header.Key.ToLower())
                     {
@@ -245,7 +233,7 @@ namespace FunckyHttp
                             break;
 
                         default:
-                            request.Headers.Add(header.Key, header.Value);
+                            request.Headers[header.Key] = header.Value;
                             break;
                     }
                 }

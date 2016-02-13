@@ -29,27 +29,13 @@ namespace FunckyHttp.Http
         public void GivenUrlIs(Wrapped<string> url)
         {
             Uri uri;
-            if (Uri.TryCreate(url, UriKind.Absolute, out uri) ||
-                Uri.TryCreate(new Uri(ScenarioContextStore.BaseUrl), url, out uri))
+            if (!Uri.TryCreate(url, UriKind.Absolute, out uri) &&
+                !Uri.TryCreate(new Uri(ScenarioContextStore.BaseUrl), url, out uri))
             {
-                HttpMethodCallContext.ResponseContext lastResponse = null;
-                if (ScenarioContextStore.HttpCallContext != null)
-                {
-                    lastResponse = ScenarioContextStore.HttpCallContext.Response;
-                }
-
-                ScenarioContextStore.HttpCallContext = new HttpMethodCallContext(uri.AbsoluteUri, ScenarioContextStore.GlobalRequestHeaders)
-                {
-                    LastResponse = lastResponse
-                };
-                
-                //need this so that we can use properties of previous response to build next request.
+                throw new ArgumentException(string.Format("Invalid url: {0}. Base Url: {1}", url ?? "<null>", ScenarioContextStore.BaseUrl ?? "<null>"));
             }
-            else
-            {
-                throw new ArgumentException(string.Format("Invalid url: {0}. Base Url: {1}", url ?? "<null>", ScenarioContextStore.BaseUrl ?? "<null>" ));
-            }
-
+           
+            ScenarioContextStore.HttpCallContext = new HttpMethodCallContext(uri.AbsoluteUri, ScenarioContextStore.GlobalRequestHeaders);
         }
 
         [Then(@"response header (.*) should exist")]
@@ -91,63 +77,53 @@ namespace FunckyHttp.Http
             ScenarioContextStore.HttpCallContext.Request.Verb = requestMethod.ToUpper();
         }
 
-
-        [Given(@"request headers are")]
-        public void GivenRequestHeadersAre(Table table)
+        [Given(@"GLOBAL request headers are")]
+        public void GivenGlobalHeadersAre(Table table)
         {
             ScenarioContextStore.GlobalRequestHeaders.Clear();
             foreach (var row in table.Rows)
             {
-                Given(string.Format("add a GLOBAL request header {0} : {1}", row["name"], row["value"]));
+                Given($"GLOBAL request header {row["name"]} is {row["value"]}");
             }
-
-            if(ScenarioContextStore.HttpCallContext != null)
-            {
-                ScenarioContextStore.HttpCallContext.Request.Headers.Clear();
-                GivenAddHeaders(table);
-            }
-            Debug.WriteLine("http.request.headers:");
-            ScenarioContextStore.GlobalRequestHeaders.ToList().ForEach(a=>Debug.WriteLine("{0} : {1}", a.Key, a.Value));
+            Debug.WriteLine("http.request.global.headers:");
+            ScenarioContextStore.GlobalRequestHeaders.ToList().ForEach(a => Debug.WriteLine($"{a.Key} : {a.Value}"));
 
         }
 
         
-        [When(@"*adds? request headers")]
-        public void WhenAddHeaders(Table table)
+        //[When(@"*adds? request headers")]
+        //public void WhenAddHeaders(Table table)
+        //{
+        //    foreach (var row in table.Rows)
+        //    {
+        //        When(string.Format("add a request header {0} : {1}", row["name"], row["value"]));
+        //    }
+        //    Debug.WriteLine("http.request.headers:");
+        //    ScenarioContextStore.HttpCallContext.Request.Headers.ToList().ForEach(a => Debug.WriteLine("{0} : {1}", a.Key, a.Value));
+        //}
+
+        [Given(@"request headers are")]
+        public void GivenHeadersAre(Table table)
         {
+            ScenarioContextStore.HttpCallContext.Request.Headers.Clear();
             foreach (var row in table.Rows)
             {
-                Given(string.Format("add a request header {0} : {1}", row["name"], row["value"]));
+                Given($"request header {row["name"]} is {row["value"]}");
             }
             Debug.WriteLine("http.request.headers:");
             ScenarioContextStore.HttpCallContext.Request.Headers.ToList().ForEach(a => Debug.WriteLine("{0} : {1}", a.Key, a.Value));
-        }
+        }   
 
-        [Given(@"*adds? request headers")]
-        public void GivenAddHeaders(Table table)
-        {
-            foreach (var row in table.Rows)
-            {
-                Given(string.Format("add a request header {0} : {1}", row["name"], row["value"]));
-            }
-            Debug.WriteLine("http.request.headers:");
-            ScenarioContextStore.HttpCallContext.Request.Headers.ToList().ForEach(a => Debug.WriteLine("{0} : {1}", a.Key, a.Value));
-        }
-
-        [When(@"*adds? a request header (.*) : (.*)")]
-        public void WhenAddHeader(string name, Wrapped<string> value)
+        [Given(@"request header (.*) is (.*)")]
+        //[When(@"*adds? a request header (.*) : (.*)")]
+        public void AddHeader(string name, Wrapped<string> value)
         {
             ScenarioContextStore.HttpCallContext.Request.Headers[name] = value;
         }
 
-        [Given(@"*adds? a request header (.*) : (.*)")]
-        public void GivenAddHeader(string name, Wrapped<string> value)
-        {
-            ScenarioContextStore.HttpCallContext.Request.Headers[name] = value;
-        }
-
-        [Given(@"*adds? a GLOBAL request header (.*) : (.*)")]
-        public void GivenGlobalAddHeader(string name, Wrapped<string> value)
+        [Given(@"GLOBAL request header (.*) is (.*)")]
+        //[When(@"*adds? a GLOBAL request header (.*) : (.*)")]
+        public void AddGlobalHeader(string name, Wrapped<string> value)
         {
             ScenarioContextStore.GlobalRequestHeaders[name] = value;
         }
@@ -163,6 +139,5 @@ namespace FunckyHttp.Http
         {
             GivenRequestContentIs(System.Text.Encoding.Default.GetBytes(content));
         }
-
     }
 }

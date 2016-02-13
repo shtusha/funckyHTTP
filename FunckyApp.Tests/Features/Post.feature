@@ -6,9 +6,9 @@
 Scenario: Create and get Post
 	#Login
 	Given url is '/Token'
+	And request header Content-Type is 'application/x-www-form-urlencoded'
 	And request content is 'grant_type=password&username=FunckyUser&password=1234567'
-	When I add a request header Content-Type : 'application/x-www-form-urlencoded'
-	And submit a POST request
+	When I submit a POST request
 	Then response Status Code should be OK
 
 	#Construct auth header
@@ -16,12 +16,11 @@ Scenario: Create and get Post
 	Then all is cool
 	
 	Given url is 'api/posts'
-	And request headers are
+	And GLOBAL request headers are
 	| name          | value              |
 	| Accept        | 'application/xml'  |
 	| Content-Type  | 'application/json' |
 	| Authorization | query result       |
-
 
 	And request content is '{ message: "one plus two equals three", inflationRate: 1 }'
 	When I submit a POST request
