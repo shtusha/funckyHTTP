@@ -1,26 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.Xml;
+﻿using System.Diagnostics;
 using TechTalk.SpecFlow;
-using System.Text;
-namespace FunckyHttp.Common
+using FunckyHttp.Common;
+
+namespace FunckyHttp.Xml
 {
     [Binding]
-    public class Hooks
+    public class Tags
     {
-        [BeforeScenario()]
-        public static void Init()
-        {
-            ScenarioContextStore.RequestHeaders = new Dictionary<string, string>();
-            ScenarioContextStore.BaseUrl = ConfigurationManager.AppSettings["baseUrl"];
-            ScenarioContextStore.NamespaceManager = new XmlNamespaceManager(new NameTable());
-            ScenarioContextStore.DropXmlNamespaces = (ConfigurationManager.AppSettings["xml.namespaces.drop"] ?? "true")
-                .Equals("true", StringComparison.CurrentCultureIgnoreCase);
-        }
-
-
         private const string RootElemnetNameTag = "rootElementName";
         [BeforeScenario(RootElemnetNameTag)]
         public static void BeforeJsonToXMLScenario()

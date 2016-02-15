@@ -1,49 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Net;
-using System.Threading.Tasks;
-using System.Collections;
 using System.Xml.XPath;
 using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
-namespace FunckyHttp.Common
+namespace FunckyHttp
 {
     public class HttpMethodCallContext
     {
 
         private readonly Lazy<ResponseContext> _responseLazy;
 
-        public ResponseContext LastResponse { get; set; }
+        //public ResponseContext LastResponse { get; set; }
 
-        public RequestContext Request { get; private set; }
+        public RequestContext Request { get; }
 
 
 
-        public ResponseContext Response
+        public ResponseContext Response => _responseLazy.Value;
+
+
+        public HttpMethodCallContext(string url, IDictionary<string, string> globalHeaders = null)
         {
-            get { return Request.Verb != null ? _responseLazy.Value : LastResponse; }
-        }
- 
-        
-
-
-        public HttpMethodCallContext(string url, IDictionary<string, string> headers)
-            : this(url)
-        {
-            foreach (var item in headers)
-            {
-                Request.Headers.Add(item.Key, item.Value);    
-            }
-        }
-
-
-        public HttpMethodCallContext(string url)
-        {
-            Request = new RequestContext(url);
+            Request = new RequestContext(url, globalHeaders);
             _responseLazy = new Lazy<ResponseContext>(() => new ResponseContext(Request.BuildWebRequest()), true);
         }
             
@@ -105,7 +86,7 @@ namespace FunckyHttp.Common
                     {
                         using (var reader = new StreamReader(new MemoryStream(_ContentLazy.Value)))
                         {
-                            Debug.WriteLine("http.response.content:\n{0}", (object)reader.ReadToEnd());                            
+                            Debug.WriteLine("http.response.body:\n{0}", (object)reader.ReadToEnd());                            
                         }
                     }
                     return _ContentLazy.Value;
@@ -150,10 +131,11 @@ namespace FunckyHttp.Common
 
         public class RequestContext
         {
-            public RequestContext(string url)
+            public RequestContext(string url, IDictionary<string, string> globalHeaders )
             {
                 Url = url;
                 Headers = new Dictionary<string, string>();
+                GlobalHeaders = globalHeaders ?? new Dictionary<string, string>();
             }
 
             private string _url;
@@ -167,8 +149,9 @@ namespace FunckyHttp.Common
                 }
             }
 
-            public IDictionary<string, string> Headers { get; private set; }
+            public IDictionary<string, string> Headers { get; }
 
+            public IDictionary<string, string> GlobalHeaders { get; } 
 
             private byte[] _content;
             public byte[] Content {
@@ -176,7 +159,7 @@ namespace FunckyHttp.Common
                 set
                 {
                     _content = value; 
-                    Debug.WriteLine("http.request.content:");
+                    Debug.WriteLine("http.request.body:");
                     Debug.WriteLine(_content.BytesToString());
                 }}
 
@@ -209,7 +192,7 @@ namespace FunckyHttp.Common
 
             private void SetHeaders(HttpWebRequest request)
             {
-                foreach (var header in Headers)
+                foreach (var header in GlobalHeaders.Concat(Headers))
                 {
                     switch (header.Key.ToLower())
                     {
@@ -250,7 +233,7 @@ namespace FunckyHttp.Common
                             break;
 
                         default:
-                            request.Headers.Add(header.Key, header.Value);
+                            request.Headers[header.Key] = header.Value;
                             break;
                     }
                 }

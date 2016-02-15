@@ -3,7 +3,7 @@
 	I want to make sure I can handle JSON
 
 Background:
-	Given request headers are
+	Given GLOBAL request headers are
 	| name         | value              |
 	| Accept       | 'application/json' |
 	| Content-Type | 'application/json' |
