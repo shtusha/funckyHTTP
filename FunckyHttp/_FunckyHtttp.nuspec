@@ -1,0 +1,16 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <summary>Functional Testing of HTTP Services</summary>
+    <projectUrl>https://github.com/shtusha/funckyHTTP</projectUrl>
+    <copyright>Copyright 2016</copyright>
+    <tags>specflow http rest testing</tags>
+  </metadata>
+</package>

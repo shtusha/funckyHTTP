@@ -1,0 +1,1 @@
+.\nuget pack ..\FunckyHttp\FunckyHttp.csproj -Prop Configuration=Release
